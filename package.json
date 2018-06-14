@@ -1,4 +1,5 @@
 {
+  "homepage": "https://cmow5.github.io/inspiration-admin",
   "name": "inspiration-admin",
   "version": "0.1.0",
   "private": true,
@@ -23,9 +24,12 @@
     "build": "react-scripts build",
     "test-react": "cross-env NODE_PATH=./src npm run test",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "eslint-config-google": "^0.9.1"
+    "eslint-config-google": "^0.9.1",
+    "gh-pages": "^1.2.0"
   }
 }
