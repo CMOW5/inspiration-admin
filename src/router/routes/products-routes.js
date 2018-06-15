@@ -1,13 +1,13 @@
-
+import BaseRoutes from './base-routes';
 /**
  * the router routes related to the product
  */
-export default class ProductRoutes {
+export default class ProductRoutes extends BaseRoutes {
   /**
    * @return {string}
    */
   static base() {
-    return '/products';
+    return super.base() + 'products';
   }
 
   /**

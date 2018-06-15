@@ -7,14 +7,14 @@ export default class BaseRoutes {
    * @return {string}
    */
   static base() {
-    return '/';
+    return '/inspiration-admin/';
   }
 
   /**
    * @return {string}
    */
   static dashboard() {
-    return '/';
+    return '/inspiration-admin/';
   }
 }
 
