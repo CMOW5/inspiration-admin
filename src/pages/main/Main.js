@@ -56,6 +56,10 @@ export default class Main extends Component {
 
     const dashboardRoute = BaseRoutes.dashboard();
     const productsListRoute = ProductRoutes.base();
+    const productsShowRoute = ProductRoutes.show();
+    const productsCreateRoute = ProductRoutes.create();
+    const productsEditRoute = ProductRoutes.edit();
+
 
     return (
 
@@ -79,11 +83,11 @@ export default class Main extends Component {
               {/* products */}
               <Route exact path = {productsListRoute}
                 component = {ProductsList} />
-              <Route exact path = '/products/create'
+              <Route exact path ={productsCreateRoute}
                 component = {CreateProductForm} />
-              <Route exact path = '/products/show/:id'
+              <Route exact path ={productsShowRoute}
                 component = {ShowProduct} />
-              <Route exact path = '/products/edit/:id'
+              <Route exact path = {productsEditRoute}
                 component = {EditProductForm}/>
 
             </Switch>
