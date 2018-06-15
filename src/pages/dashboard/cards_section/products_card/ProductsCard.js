@@ -7,10 +7,13 @@ import {goToRoute} from 'store/actions/router-actions';
 /* api */
 import ProductsRequest from 'services/api/products/products-request';
 
+/* routes */
+import {withRouter} from 'react-router-dom';
+import RouterHandler from 'router/router-handler';
+import ProductRoutes from 'router/routes/products-routes';
+
 /* components */
 import SingleCard from '../utils/SingleCard';
-
-import {withRouter} from 'react-router-dom';
 
 /**
  * products card component
@@ -33,19 +36,14 @@ class ProductsCard extends Component {
    *
    */
   showProducts() {
-    // this.props.goToRoute('/products');
-    const location = {
-      pathname: '/products',
-      // state: { fromPro: true }
-    };
-    this.props.history.push(location);
+    const route = ProductRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
   }
 
   /**
    * get the products info
    */
   componentDidMount() {
-    console.log('router = ', this.props);
     this.getCount();
   }
 
