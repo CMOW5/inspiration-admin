@@ -8,6 +8,7 @@ export default class BaseUrls {
    * @return {string} the base url
    */
   static base() {
-    return 'http://localhost:8000/api';
+    // return 'http://localhost:8000/api';
+    return 'https://inspirationbe.herokuapp.com/api';
   }
 }
