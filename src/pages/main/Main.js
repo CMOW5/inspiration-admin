@@ -77,6 +77,9 @@ export default class Main extends Component {
 
             <Switch>
 
+              <Route exact path = '/'
+                component={DashBoard}/>
+
               <Route exact path = {dashboardRoute}
                 component={DashBoard}/>
 
