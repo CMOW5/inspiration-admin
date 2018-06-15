@@ -14,6 +14,10 @@ import MainNavBar from 'components/navs/main_nav/MainNavBar';
 import SideNav from 'components/navs/side_nav/SideNav';
 import DashBoard from 'pages/dashboard/DashBoard';
 
+/* routes */
+import BaseRoutes from 'router/routes/base-routes';
+import ProductRoutes from 'router/routes/products-routes';
+
 // products
 import ProductsList from 'pages/products/ProductsList';
 import ShowProduct from 'pages/products/show/ShowProduct';
@@ -49,6 +53,10 @@ export default class Main extends Component {
    */
   render() {
     Logger.log(this.componentName + 'render');
+
+    const dashboardRoute = BaseRoutes.dashboard();
+    const productsListRoute = ProductRoutes.base();
+
     return (
 
       <div>
@@ -65,10 +73,11 @@ export default class Main extends Component {
 
             <Switch>
 
-              <Route exact path='/' component={DashBoard}/>
+              <Route exact path = {dashboardRoute}
+                component={DashBoard}/>
 
               {/* products */}
-              <Route exact path = '/products'
+              <Route exact path = {productsListRoute}
                 component = {ProductsList} />
               <Route exact path = '/products/create'
                 component = {CreateProductForm} />

@@ -14,7 +14,7 @@ export default class BaseRoutes {
    * @return {string}
    */
   static dashboard() {
-    return '/inspiration-admin';
+    return this.base();
   }
 }
 
