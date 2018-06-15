@@ -24,7 +24,7 @@ export default class ProductsUrls extends BaseUrls {
     if (Number.isInteger(page)) {
       params.page = page;
       return this.base() +
-        '/admin/products/?' + this.buildQueryParameters(params);
+        '/admin/products?' + this.buildQueryParameters(params);
     } else {
       // the page parameter is a url so we just append the query params
       return page + this.buildQueryParameters(params);
@@ -46,7 +46,7 @@ export default class ProductsUrls extends BaseUrls {
    * @return {string}
    */
   static create() {
-    return this.base() + '/admin/products/';
+    return this.base() + '/admin/products';
   }
 
   /**

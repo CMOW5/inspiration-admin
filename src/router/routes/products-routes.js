@@ -7,7 +7,7 @@ export default class ProductRoutes extends BaseRoutes {
    * @return {string}
    */
   static base() {
-    return super.base() + '/products';
+    return super.base() + 'products';
   }
 
   /**
