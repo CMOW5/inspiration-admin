@@ -7,8 +7,8 @@ export default class BaseRoutes {
    * @return {string}
    */
   static base() {
-    return '/';
-    // return '/inspiration-admin/';
+    // return '/';
+    return '/inspiration-admin/';
   }
 
   /**

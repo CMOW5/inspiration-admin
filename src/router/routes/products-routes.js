@@ -14,7 +14,7 @@ export default class ProductRoutes extends BaseRoutes {
    * @param {number} id
    * @return {string}
    */
-  static show(id) {
+  static show(id=':id') {
     return `${this.base()}/show/${id}`;
   }
 
@@ -30,7 +30,7 @@ export default class ProductRoutes extends BaseRoutes {
    * @param {number} id
    * @return {string}
    */
-  static edit(id) {
+  static edit(id=':id') {
     return `${this.base()}/edit/${id}`;
   }
 }
