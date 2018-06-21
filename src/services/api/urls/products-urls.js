@@ -27,7 +27,7 @@ export default class ProductsUrls extends BaseUrls {
         '/admin/products?' + this.buildQueryParameters(params);
     } else {
       // the page parameter is a url so we just append the query params
-      return page + this.buildQueryParameters(params);
+      return page + '&' + this.buildQueryParameters(params);
     }
   }
 
