@@ -37,12 +37,13 @@ export default class ProductsRequest {
   /**
    * Get the products with the given page
    *
-   * @param {string|number} page the page or a full url
-   * @param {object} queryParams the query parameters
+   * @param {object} queryParams query parameters
+   * @param {string} optionalUrl (optional) use this optional url instead
+   *  of the default url
    * @return {*}
    */
-  static getProducts(page=1, queryParams={}) {
-    let url = ProductsUrls.fetchProducts(page, queryParams);
+  static getProducts(queryParams={}, optionalUrl) {
+    let url = ProductsUrls.fetchProducts(queryParams, optionalUrl);
 
     return new Promise((resolve, reject) => {
       HttpRequester.get(url)
