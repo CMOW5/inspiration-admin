@@ -127,7 +127,14 @@ class ProductList extends Component {
    * @param {string|number} page
    */
   pageSelected(page) {
-    this.fetchProducts(page);
+    if (Number.isInteger(page)) {
+      const params = {page: page};
+      this.fetchProducts(params);
+    } else {
+      // the page is a url
+      const url = page;
+      this.fetchProducts({}, url);
+    }
   }
 
   /**
@@ -142,12 +149,12 @@ class ProductList extends Component {
 
   /**
    * fetch the products from the db
-   * @param {string|number} url
    * @param {object} params
+   * @param {string} url
    */
-  async fetchProducts(url, params={}) {
+  async fetchProducts(params={}, url) {
     params.keyword = this.state.searchKeyword;
-    const response = await ProductsRequest.getProducts(url, params);
+    const response = await ProductsRequest.getProducts(params, url);
     this.setState({
       products: response.products,
       paginator: new Paginator(response.paginator),
