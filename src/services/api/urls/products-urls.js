@@ -1,5 +1,8 @@
 import BaseUrls from './base-urls';
 
+/* utils */
+import isString from 'lodash/isString';
+
 /**
  * this helper class provides methods to get the
  * urls related to the products admin
@@ -16,18 +19,17 @@ export default class ProductsUrls extends BaseUrls {
   /**
    * url to fetch products from db
    *
-   * @param {number} page
    * @param {number} params
+   * @param {number} url
    * @return {string}
    */
-  static fetchProducts(page=1, params={}) {
-    if (Number.isInteger(page)) {
-      params.page = page;
+  static fetchProducts(params={}, url) {
+    if (isString(url)) {
+      // just append the query params to the given url
+      return url + '&' + this.buildQueryParameters(params);
+    } else {
       return this.base() +
         '/admin/products?' + this.buildQueryParameters(params);
-    } else {
-      // the page parameter is a url so we just append the query params
-      return page + '&' + this.buildQueryParameters(params);
     }
   }
 
