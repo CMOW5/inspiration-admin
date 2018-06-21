@@ -27,7 +27,7 @@ export default class ErrorNotification extends Component {
    * @return {ReactNode}
    */
   render() {
-    const message = 'some error ocurred';
+    const message = 'some error ocurred, please contact the page maintainer';
     const show = this.props.show;
 
     return (
