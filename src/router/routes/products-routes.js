@@ -1,6 +1,6 @@
 import BaseRoutes from './base-routes';
 /**
- * the router routes related to the product
+ * the front end routes related to the products (react router)
  */
 export default class ProductRoutes extends BaseRoutes {
   /**
