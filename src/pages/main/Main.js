@@ -15,14 +15,22 @@ import SideNav from 'components/navs/side_nav/SideNav';
 import DashBoard from 'pages/dashboard/DashBoard';
 
 /* routes */
-import BaseRoutes from 'router/routes/base-routes';
-import ProductRoutes from 'router/routes/products-routes';
+import baseRoutes from 'router/routes/base-routes';
+import productsRoutes from 'router/routes/products-routes';
+import categoriesRoutes from 'router/routes/categories-routes';
+
 
 // products
 import ProductsList from 'pages/products/ProductsList';
 import ShowProduct from 'pages/products/show/ShowProduct';
 import CreateProductForm from 'pages/products/create/CreateProductForm';
 import EditProductForm from 'pages/products/edit/EditProductForm';
+
+// categories
+import ShowCategory from 'pages/categories/show/ShowCategory';
+import CategoriesList from 'pages/categories/CategoriesList';
+import EditCategoryForm from 'pages/categories/edit/EditCategoryForm';
+
 
 import Footer from 'components/footer/Footer';
 
@@ -61,12 +69,17 @@ export default class Main extends Component {
   render() {
     Logger.log(this.componentName + 'render');
 
-    const dashboardRoute = BaseRoutes.dashboard();
-    const productsListRoute = ProductRoutes.base();
-    const productsShowRoute = ProductRoutes.show();
-    const productsCreateRoute = ProductRoutes.create();
-    const productsEditRoute = ProductRoutes.edit();
-
+    /* routes */
+    const dashboardRoute = baseRoutes.dashboard();
+    /* products routes */
+    const productsListRoute = productsRoutes.base();
+    const productsShowRoute = productsRoutes.show();
+    const productsCreateRoute = productsRoutes.create();
+    const productsEditRoute = productsRoutes.edit();
+    /* categories routes */
+    const categoriesListRoute = categoriesRoutes.base();
+    const categoryShowRoute = categoriesRoutes.show();
+    const categoriesEditRoute = categoriesRoutes.edit();
 
     return (
 
@@ -99,6 +112,14 @@ export default class Main extends Component {
                 component = {ShowProduct} />
               <Route exact path = {productsEditRoute}
                 component = {EditProductForm}/>
+
+              {/* categories */}
+              <Route exact path = {categoriesListRoute}
+                component = {CategoriesList} />
+              <Route exact path = {categoryShowRoute}
+                component = {ShowCategory} />
+              <Route exact path = {categoriesEditRoute}
+                component = {EditCategoryForm}/>
 
             </Switch>
 
