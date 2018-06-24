@@ -68,6 +68,7 @@ class EditProductForm extends Component {
     this.sendForm = this.sendForm.bind(this);
     this.showProductEditedModal = this.showProductEditedModal.bind(this);
     this.goToShowProduct = this.goToShowProduct.bind(this);
+    this.goToProductsList = this.goToProductsList.bind(this);
 
     /* helpers to calculate the form styles */
     this.inputClass = this.inputClass.bind(this);
@@ -209,6 +210,15 @@ class EditProductForm extends Component {
   }
 
   /**
+   * redirect the user to the product list page
+   * @param {number} id product id
+   */
+  goToProductsList() {
+    const route = ProductsRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
+  }
+
+  /**
    * render the options in th category dropdown
    * @return {ReactNode}
    */
@@ -277,7 +287,11 @@ class EditProductForm extends Component {
       <div>
 
         {/* header */}
-        <EditHeader title='Edit Product' icon='fa fa-shopping-bag fa-2x' />
+        <EditHeader
+          title='Edit Product'
+          icon='fa fa-shopping-bag fa-2x'
+          onReturnButtonClicked = {this.goToProductsList}
+        />
 
         <form onSubmit={this.handleSubmit}>
 
