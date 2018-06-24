@@ -1,22 +1,22 @@
-import HttpRequester from 'services/api/http-requester';
-import CategoriesUrls from '../urls/categories-urls';
+import httpRequester from 'services/api/http-requester';
+import categoriesUrls from '../urls/categories-urls';
 
 /* utils */
-import Logger from 'utils/logger/logger';
+import logger from 'utils/logger/logger';
 
 /**
- * class to make http request related to the products admin
+ * class to make http request related to the categories admin
  */
 export default class CategoriesRequest {
   /**
-   * get the total products count
+   * get the total categories count
    * @return {Promise}
    */
   static count() {
-    const url = CategoriesUrls.count();
+    const url = categoriesUrls.count();
 
     return new Promise((resolve, reject) => {
-      HttpRequester.get(url)
+      httpRequester.get(url)
         .then((response) => {
           const count = response.data.data;
           resolve(count);
@@ -28,19 +28,19 @@ export default class CategoriesRequest {
   }
 
   /**
-   * Get the products with the given page
+   * Get the category info
    *
-   * @param {string} page
-   * @return {*}
+   * @param {string} id the category id
+   * @return {Promise} the category info
    */
-  static fetchAllCategories() {
-    let url = CategoriesUrls.fetchAllCategories();
+  static fetchCategory(id) {
+    let url = categoriesUrls.fetchCategory(id);
 
     return new Promise((resolve, reject) => {
-      HttpRequester.get(url)
+      httpRequester.get(url)
         .then((response) => {
-          const categories = response.data.data;
-          resolve(categories);
+          const category = response.data.data;
+          resolve(category);
         })
         .catch((error) => {
           reject(error);
@@ -49,22 +49,43 @@ export default class CategoriesRequest {
   }
 
   /**
-   * add a new product
+   * fetch all the categories
    *
-   * @param {Object} data
-   * @return {*} Promise
+   * @param {string} page
+   * @return {Promise}
    */
-  static addCategory(data) {
-    const methodName = ' addProduct() ';
-    Logger.log(this.className() + methodName);
-
-    let url = CategoriesUrls.create();
+  static fetchAllCategories() {
+    let url = categoriesUrls.fetchAllCategories();
 
     return new Promise((resolve, reject) => {
-      HttpRequester.post(url, data)
+      httpRequester.get(url)
+        .then((response) => {
+          const categories = response.data.data;
+          resolve({categories: categories});
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * create a new category
+   *
+   * @param {Object} data
+   * @return {Promise} Promise
+   */
+  static createCategory(data) {
+    const methodName = ' addProduct() ';
+    logger.log(this.className() + methodName);
+
+    let url = categoriesUrls.create();
+
+    return new Promise((resolve, reject) => {
+      httpRequester.post(url, data)
         .then((response) => {
           const methodName = ' then(..) ';
-          Logger.log(this.className() + methodName + 'data = ' + response);
+          logger.log(this.className() + methodName + 'data = ' + response);
 
           /* get the updated product data */
           const productData = response.data;
@@ -72,29 +93,30 @@ export default class CategoriesRequest {
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
-          Logger.log(this.className() + methodName + 'data = ' + error);
+          logger.log(this.className() + methodName + 'data = ' + error);
           reject(error);
         });
     });
   }
 
   /**
-   * update the product with the given id
+   * update the category with the given id
+   *
    * @param {Object} id
    * @param {Object} data
-   * @return {*}
+   * @return {Promise}
    */
   static updateCategory(id, data) {
     const methodName = ' updateProduct() ';
-    Logger.log(this.className() + methodName);
+    logger.log(this.className() + methodName);
 
-    let url = CategoriesUrls.update() + id;
+    let url = categoriesUrls.update() + id;
 
     return new Promise((resolve, reject) => {
-      HttpRequester.post(url, data)
+      httpRequester.post(url, data)
         .then((response) => {
           const methodName = ' then(..) ';
-          Logger.log(this.className() + methodName + 'data = ' + response);
+          logger.log(this.className() + methodName + 'data = ' + response);
 
           /* get the updated product data */
           const productData = response.data;
@@ -102,33 +124,33 @@ export default class CategoriesRequest {
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
-          Logger.log(this.className() + methodName + 'data = ' + error);
+          logger.log(this.className() + methodName + 'data = ' + error);
           reject(error);
         });
     });
   }
 
   /**
-   * delete a product
+   * delete the category with the given id
    *
    * @param {Object} id
-   * @return {*}
+   * @return {Promise}
    */
   static deleteCategory(id) {
     const methodName = ' deleteProduct() ';
-    let url = CategoriesUrls.delete() + id;
-    Logger.log(this.className() + methodName);
+    let url = categoriesUrls.delete() + id;
+    logger.log(this.className() + methodName);
 
     return new Promise((resolve, reject) => {
-      HttpRequester.delete(url)
+      httpRequester.delete(url)
         .then((response) => {
           const methodName = ' then(..) ';
-          Logger.log(this.className() + methodName + 'data = ' + response);
+          logger.log(this.className() + methodName + 'data = ' + response);
           resolve(response);
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
-          Logger.log(this.className() + methodName + 'data = ' + error);
+          logger.log(this.className() + methodName + 'data = ' + error);
           reject(error);
         });
     });
