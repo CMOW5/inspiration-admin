@@ -23,10 +23,14 @@ class MainNavBar extends Component {
       navItems: ['home', 'products', 'catalog'],
       showDropdown: false,
     };
+    /* methods bindings */
     this.goTo = this.goTo.bind(this);
     this.setSelectedItem = this.setSelectedItem.bind(this);
     this.setNavItemClass = this.setNavItemClass.bind(this);
     this.logout = this.logout.bind(this);
+    this.dropDownCliked = this.dropDownCliked.bind(this);
+    this.dropDownClass = this.dropDownClass.bind(this);
+    this.toggleSideNav = this.toggleSideNav.bind(this);
   }
 
   /**
@@ -68,21 +72,29 @@ class MainNavBar extends Component {
     this.props.logoutAction();
   }
 
-  dropDownCliked = () => {
+  /**
+   * toggle the dropdown visibility
+   */
+  dropDownCliked() {
     this.setState((prevState) => ({
       showDropdown: !prevState.showDropdown,
     }));
   }
 
   /**
+   * set the proper dropdown class
+   * eg => is-active to display the dropdown
    * @return {string}
    */
-  dropDownClass = () => {
+  dropDownClass() {
     return this.state.showDropdown ? 'dropdown is-right is-active'
       : 'dropdown is-right';
   }
 
-  toggleSideNav = () => {
+  /**
+   * toggle the sidenav visibility
+   */
+  toggleSideNav() {
     this.props.onToggleSideNav();
   }
 

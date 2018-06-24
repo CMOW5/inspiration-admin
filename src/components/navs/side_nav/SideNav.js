@@ -24,9 +24,14 @@ class SideNav extends Component {
     super(props);
     this.state = {
     };
+    /* create a sidenav ref to attach new styles in order
+      to hide/show the sidenav */
+    this.sideNavRef = React.createRef();
+    /* methods bindings */
     this.goToProducts = this.goToProducts.bind(this);
     this.goToDahsBoard = this.goToDahsBoard.bind(this);
-    this.sideNavRef = React.createRef();
+    this.toggleNav = this.toggleNav.bind(this);
+    this.closeNav = this.closeNav.bind(this);
   }
 
   /**
@@ -58,9 +63,9 @@ class SideNav extends Component {
   }
 
   /**
-   *
+   * toggle the side nav visibility
    */
-  toggleNav = () => {
+  toggleNav() {
     if (this.sideNavRef.current.style.display === 'block') {
       this.sideNavRef.current.style.display = 'none';
     } else {
@@ -68,7 +73,10 @@ class SideNav extends Component {
     }
   }
 
-  closeNav = () => {
+  /**
+   * close the side nav
+   */
+  closeNav() {
     this.sideNavRef.current.style.display = 'none';
   }
 

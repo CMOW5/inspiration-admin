@@ -12,7 +12,7 @@ import './App.css';
 /* components */
 import SignInPage from 'pages/signin/SignInPage';
 import Main from 'pages/main/Main';
-import requireAuth from 'components/auth/RequireAuth';
+// import requireAuth from 'components/auth/RequireAuth';
 
 // import TestComponent from 'components/test/TestComponent';
 

@@ -41,13 +41,20 @@ export default class Main extends Component {
     };
     this.componentName = 'Main ';
     Logger.log(this.componentName + 'constructor');
+
+    /* methods bindings */
+    this.toggleSideNav = this.toggleSideNav.bind(this);
   }
 
-  toggleSideNav = () => {
+  /**
+   * toogle the sine navbar visibility
+   */
+  toggleSideNav() {
     this.setState((prevState) => ({
       openSideNav: !prevState.openSideNav,
     }));
   }
+
   /**
    * @return {ReactNode}
    */
