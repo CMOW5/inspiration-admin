@@ -2,11 +2,11 @@ import BaseUrls from './base-urls';
 
 /**
  * this helper class provides methods to get the
- * urls related to the products admin
+ * urls related to the categories admin
  */
 export default class CategoriesUrls extends BaseUrls {
   /**
-   * total products count url
+   * url to get the total count of categories
    * @return {string}
    */
   static count() {
@@ -14,7 +14,7 @@ export default class CategoriesUrls extends BaseUrls {
   }
 
   /**
-   * url to fetch products from db
+   * url to fetch all the categories in the db
    *
    * @param {number} page
    * @return {string}
@@ -24,7 +24,17 @@ export default class CategoriesUrls extends BaseUrls {
   }
 
   /**
-   * url to fetch products from db
+   * url to fetch a category from the db
+   *
+   * @param {number} id
+   * @return {string}
+   */
+  static fetchCategory(id) {
+    return this.base() + `/admin/categories/${id}`;
+  }
+
+  /**
+   * url to create a new category
    * @return {string}
    */
   static create() {
@@ -32,7 +42,7 @@ export default class CategoriesUrls extends BaseUrls {
   }
 
   /**
-   * url to fetch products from db
+   * url to update a category in the db
    * @return {string}
    */
   static update() {
@@ -40,7 +50,7 @@ export default class CategoriesUrls extends BaseUrls {
   }
 
   /**
-   * url to fetch products from db
+   * url to delete a category in the db
    * @return {string}
    */
   static delete() {
