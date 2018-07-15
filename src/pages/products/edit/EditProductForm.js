@@ -18,6 +18,8 @@ import EditHeader from 'pages/utils/list_headers/EditHeader';
 import ImageEditor from 'components/images/image_editor/ImageEditor';
 import SimpleNotification
   from 'components/modals/simple_notification/SimpleNotification';
+import Loading from 'components/utils/loading/Loading';
+import LoadingModal from 'components/modals/loading/LoadingModal';
 
 /* styles */
 import './edit-product-form.css';
@@ -47,6 +49,8 @@ class EditProductForm extends Component {
       idsToDelete: [],
       newImages: [],
       showEditedModal: false,
+      showEditingModal: false,
+      isFetching: true,
 
       categories: [],
       form: new Form({
@@ -75,6 +79,7 @@ class EditProductForm extends Component {
     this.textAreaClass = this.textAreaClass.bind(this);
 
     /* render methods */
+    this.renderProductInfo = this.renderProductInfo.bind(this);
     this.renderCategoriesOptions = this.renderCategoriesOptions.bind(this);
     this.renderError = this.renderError.bind(this);
   }
@@ -91,6 +96,7 @@ class EditProductForm extends Component {
         this.setState({
           categories: categories,
           ...product,
+          isFetching: false,
         });
       })
       .catch((err) => {
@@ -165,6 +171,7 @@ class EditProductForm extends Component {
     form.setPutMethod();
     this.setState((prevState) => ({
       form: form,
+      showEditingModal: true,
     }), this.sendForm);
   }
 
@@ -187,6 +194,7 @@ class EditProductForm extends Component {
         form.saveErrors(error);
         this.setState({
           form: form,
+          showEditingModal: false,
         });
       });
   }
@@ -198,6 +206,7 @@ class EditProductForm extends Component {
   showProductEditedModal() {
     this.setState({
       showEditedModal: true,
+      showEditingModal: false,
     });
   }
 
@@ -219,80 +228,17 @@ class EditProductForm extends Component {
   }
 
   /**
-   * render the options in th category dropdown
+   * show the form with the product info
+   * or a loading icon if the product is not fetched
+   * yet
+   *
    * @return {ReactNode}
    */
-  renderCategoriesOptions() {
-    const categoriesOptions = this.state.categories.map((category) => {
+  renderProductInfo() {
+    if (this.state.isFetching) {
+      return <Loading show="true" title="product" />;
+    } else {
       return (
-        <option
-          key={category.id} value={category.id}>
-          {category.name}
-        </option>
-      );
-    });
-    return categoriesOptions;
-  }
-
-  /**
-   * render a <p> tag with the given field error message
-   * @param {string} field the error field
-   * @return {ReactNode}
-   */
-  renderError(field) {
-    if (this.state.form.hasError(field)) {
-      const errorMessage = this.state.form.getErrorMessage(field);
-      return (
-        <p
-          className="help is-danger">
-          {errorMessage}
-        </p>
-      );
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * calculate the form input class
-   * @param {string} field the field name
-   * @return {string} the field className
-   */
-  inputClass(field) {
-    if (this.state.form.hasError(field)) {
-      return 'input is-danger';
-    } else {
-      return 'input';
-    }
-  }
-
-  /**
-   * calculate the form textarea class
-   * @param {string} field the field name
-   * @return {string} the field className
-   */
-  textAreaClass(field) {
-    if (this.state.form.hasError(field)) {
-      return 'textarea is-danger';
-    } else {
-      return 'textarea';
-    }
-  }
-
-  /**
-   * @return {ReactNode}
-   */
-  render() {
-    return (
-      <div>
-
-        {/* header */}
-        <EditHeader
-          title='Edit Product'
-          icon='fa fa-shopping-bag fa-2x'
-          onReturnButtonClicked = {this.goToProductsList}
-        />
-
         <form onSubmit={this.handleSubmit}>
 
           <div className="field">
@@ -466,6 +412,86 @@ class EditProductForm extends Component {
           </div>
 
         </form>
+      );
+    }
+  }
+
+  /**
+   * render the options in th category dropdown
+   * @return {ReactNode}
+   */
+  renderCategoriesOptions() {
+    const categoriesOptions = this.state.categories.map((category) => {
+      return (
+        <option
+          key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      );
+    });
+    return categoriesOptions;
+  }
+
+  /**
+   * render a <p> tag with the given field error message
+   * @param {string} field the error field
+   * @return {ReactNode}
+   */
+  renderError(field) {
+    if (this.state.form.hasError(field)) {
+      const errorMessage = this.state.form.getErrorMessage(field);
+      return (
+        <p
+          className="help is-danger">
+          {errorMessage}
+        </p>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * calculate the form input class
+   * @param {string} field the field name
+   * @return {string} the field className
+   */
+  inputClass(field) {
+    if (this.state.form.hasError(field)) {
+      return 'input is-danger';
+    } else {
+      return 'input';
+    }
+  }
+
+  /**
+   * calculate the form textarea class
+   * @param {string} field the field name
+   * @return {string} the field className
+   */
+  textAreaClass(field) {
+    if (this.state.form.hasError(field)) {
+      return 'textarea is-danger';
+    } else {
+      return 'textarea';
+    }
+  }
+
+  /**
+   * @return {ReactNode}
+   */
+  render() {
+    return (
+      <div>
+
+        {/* header */}
+        <EditHeader
+          title='Edit Product'
+          icon='fa fa-shopping-bag fa-2x'
+          onReturnButtonClicked = {this.goToProductsList}
+        />
+
+        {this.renderProductInfo()}
 
         <SimpleNotification
           show = {this.state.showEditedModal}
@@ -473,6 +499,11 @@ class EditProductForm extends Component {
           type = 'info'
           onConfirmationButtonClicked = {this.goToShowProduct}
           onCancelButtonClicked = {this.goToShowProduct}
+        />
+
+        <LoadingModal
+          show = {this.state.showEditingModal}
+          message = "editing the product...please wait"
         />
 
       </div>
