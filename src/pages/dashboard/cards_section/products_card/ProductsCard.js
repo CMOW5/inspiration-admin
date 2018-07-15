@@ -14,6 +14,7 @@ import ProductRoutes from 'router/routes/products-routes';
 
 /* components */
 import SingleCard from '../utils/SingleCard';
+import Loading from 'components/utils/loading/Loading';
 
 /**
  * products card component
@@ -27,6 +28,7 @@ class ProductsCard extends Component {
     this.state = {
       count: 0,
       tag: 'product',
+      isFetching: true,
     };
     this.getCount = this.getCount.bind(this);
     this.showProducts = this.showProducts.bind(this);
@@ -55,6 +57,7 @@ class ProductsCard extends Component {
     const count = await ProductsRequest.count();
     this.setState({
       count: count,
+      isFetching: false,
     });
   }
 
@@ -63,13 +66,14 @@ class ProductsCard extends Component {
    */
   render() {
     return (
-      <SingleCard
-        icon = 'fa fa-shopping-bag fa-5x'
-        tag = {this.state.tag}
-        count = {this.state.count}
-        image = "https://picsum.photos/200/700"
-        onButtonClicked = {this.showProducts}
-      />
+      this.state.isFetching ? <Loading show={true} title="products" /> :
+        <SingleCard
+          icon = 'fa fa-shopping-bag fa-5x'
+          tag = {this.state.tag}
+          count = {this.state.count}
+          image = "https://picsum.photos/200/700"
+          onButtonClicked = {this.showProducts}
+        />
     );
   }
 }

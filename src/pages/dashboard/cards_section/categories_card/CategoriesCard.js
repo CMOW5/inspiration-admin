@@ -5,6 +5,7 @@ import ProductsRequest from 'services/api/products/products-request';
 
 /* components */
 import SingleCard from '../utils/SingleCard';
+import Loading from 'components/utils/loading/Loading';
 
 /**
  * products card component
@@ -18,6 +19,7 @@ export default class CategoriesCard extends Component {
     this.state = {
       count: 0,
       tag: 'category',
+      isFetching: true,
     };
     this.getCount = this.getCount.bind(this);
   }
@@ -38,6 +40,7 @@ export default class CategoriesCard extends Component {
     const count = await ProductsRequest.count();
     this.setState({
       count: count,
+      isFetching: false,
     });
   }
 
@@ -46,12 +49,13 @@ export default class CategoriesCard extends Component {
    */
   render() {
     return (
-      <SingleCard
-        icon = 'fa fa-sitemap fa-5x'
-        tag = {this.state.tag}
-        count = {this.state.count}
-        image = "https://picsum.photos/200/600"
-      />
+      this.state.isFetching ? <Loading show={true} title="categories" /> :
+        <SingleCard
+          icon = 'fa fa-sitemap fa-5x'
+          tag = {this.state.tag}
+          count = {this.state.count}
+          image = "https://picsum.photos/200/600"
+        />
     );
   }
 }
