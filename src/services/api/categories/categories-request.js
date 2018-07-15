@@ -61,7 +61,7 @@ export default class CategoriesRequest {
       httpRequester.get(url)
         .then((response) => {
           const categories = response.data.data;
-          resolve({categories: categories});
+          resolve(categories);
         })
         .catch((error) => {
           reject(error);
