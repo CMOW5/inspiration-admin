@@ -22,6 +22,7 @@ export default class DeleteProductModal extends Component {
     super(props);
     this.state = {
       showError: false,
+      isDeleting: false,
     };
     this.closeModal = this.closeModal.bind(this);
     this.closeErrorModal = this.closeErrorModal.bind(this);
@@ -30,14 +31,22 @@ export default class DeleteProductModal extends Component {
 
   /**
    * notify the parent that the confirmation button was clicked
+   * TODO: improve the setState isDeleting prop
    */
   deleteProduct() {
     // do the http request
+    this.setState({
+      isDeleting: true,
+    });
+
     const id = this.props.product.id;
     ProductsRequest
       .deleteProduct(id)
       .then((response) => {
         // show some error notification
+        this.setState({
+          isDeleting: false,
+        });
         this.props.onDeleteSucess();
       })
       .catch((error) => {
@@ -81,6 +90,7 @@ export default class DeleteProductModal extends Component {
           type = 'danger'
           onConfirmationButtonClicked = {this.deleteProduct}
           onCancelButtonClicked = {this.closeModal}
+          loading = {this.state.isDeleting}
         />
 
         <ErrorNotification
