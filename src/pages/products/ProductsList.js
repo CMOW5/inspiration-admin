@@ -21,6 +21,7 @@ import ListHeader from 'pages/utils/list_headers/ListHeader';
 import SingleProductRow from './SingleProductRow';
 import Pagination from 'components/pagination/Pagination';
 import DeleteProductModal from './delete/DeleteProductModal';
+import Loading from 'components/utils/loading/Loading';
 
 /**
  * product list component
@@ -37,10 +38,12 @@ class ProductList extends Component {
       selectedProduct: {},
       showDeleteModal: false,
       searchKeyword: '',
+      isFetching: true,
     };
     this.componentName = 'ProductsList ';
     this.fetchProducts = this.fetchProducts.bind(this);
     this.pageSelected = this.pageSelected.bind(this);
+    this.renderMainTable = this.renderMainTable.bind(this);
 
     /* action buttons */
     this.createProduct = this.createProduct.bind(this);
@@ -151,14 +154,67 @@ class ProductList extends Component {
    * fetch the products from the db
    * @param {object} params
    * @param {string} url
+   * TODO: improve the setState calls
    */
   async fetchProducts(params={}, url) {
     params.keyword = this.state.searchKeyword;
+    this.setState({
+      isFetching: true,
+    });
     const response = await ProductsRequest.getProducts(params, url);
     this.setState({
       products: response.products,
       paginator: new Paginator(response.paginator),
+      isFetching: false,
     });
+  }
+
+  /**
+   * render the products table or a loading icon
+   * while the fetching is still in progress
+   *
+   * @param {array} productsRows
+   * @return {ReactNode}
+   * TODO: improve this function readability creating a new table component
+   * and making the function pure (state.isFetching)
+   */
+  renderMainTable(productsRows) {
+    if (this.state.isFetching) {
+      return <Loading show={true} title="products" />;
+    } else {
+      return (
+        <div>
+          <table className="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>description</th>
+                <th>price</th>
+                <th><abbr title="image">image</abbr></th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tfoot>
+            </tfoot>
+            <tbody>
+              {productsRows}
+            </tbody>
+          </table>
+
+          <Pagination
+            paginator = {this.state.paginator}
+            onPageSelected = {this.pageSelected}
+          />
+
+          <DeleteProductModal
+            show = {this.state.showDeleteModal}
+            product = {this.state.selectedProduct}
+            onDeleteSucess = {this.onDeleteSucess}
+            onDeleteCancel = {this.onDeleteCancel}
+          />
+        </div>
+      );
+    }
   }
 
   /**
@@ -184,34 +240,8 @@ class ProductList extends Component {
           onClick = {this.createProduct}
           onSearch = {this.searchProducts}
         />
-        <table className="table is-fullwidth">
-          <thead>
-            <tr>
-              <th>name</th>
-              <th>description</th>
-              <th>price</th>
-              <th><abbr title="image">image</abbr></th>
-              <th>actions</th>
-            </tr>
-          </thead>
-          <tfoot>
-          </tfoot>
-          <tbody>
-            {productsRows}
-          </tbody>
-        </table>
 
-        <Pagination
-          paginator = {this.state.paginator}
-          onPageSelected = {this.pageSelected}
-        />
-
-        <DeleteProductModal
-          show = {this.state.showDeleteModal}
-          product = {this.state.selectedProduct}
-          onDeleteSucess = {this.onDeleteSucess}
-          onDeleteCancel = {this.onDeleteCancel}
-        />
+        {this.renderMainTable(productsRows)}
 
       </div>
 
