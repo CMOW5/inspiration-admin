@@ -22,6 +22,7 @@ import './show-product.css';
 
 /* components */
 import ShowHeader from 'pages/utils/list_headers/ShowHeader';
+import Loading from 'components/utils/loading/Loading';
 
 /**
  * component to display the product details
@@ -38,6 +39,7 @@ class ShowProduct extends Component {
       product: {
         images: [],
       },
+      isFetching: true,
     };
     this.hiddenFields = [
       'id', 'images',
@@ -45,6 +47,7 @@ class ShowProduct extends Component {
     this.getProduct = this.getProduct.bind(this);
     this.goToProductsList = this.goToProductsList.bind(this);
     this.goToEditProduct = this.goToEditProduct.bind(this);
+    this.renderProductInfo = this.renderProductInfo.bind(this);
   }
 
   /**
@@ -62,6 +65,7 @@ class ShowProduct extends Component {
     const product = await ProductsRequest.getProduct(id);
     this.setState({
       product: product,
+      isFetching: false,
     });
   }
 
@@ -84,20 +88,39 @@ class ShowProduct extends Component {
     RouterHandler.goTo(this.props.history, route);
   }
 
+  /**
+   *
+   * @param {*} product
+   * @return {ReactNode}
+   */
+  renderProductInfo(product) {
+    if (this.state.isFetching) {
+      return <Loading show={true} title="product" />;
+    } else {
+      const productSections =
+        Object.keys(product).filter((key) => {
+          return !this.hiddenFields.includes(key);
+        }).map((key, index) => {
+          return (
+            <Section key={index} title={key} text={product[key]} />
+          );
+        });
+
+      return (
+        <div>
+          {productSections}
+          <ImagesSection title="images" images={product.images} />
+        </div>
+      );
+    }
+  }
+
 
   /**
    * @return {ReactNode}
    */
   render() {
     const product = this.state.product;
-    const sections =
-      Object.keys(product).filter((key) => {
-        return !this.hiddenFields.includes(key);
-      }).map((key, index) => {
-        return (
-          <Section key={index} title={key} text={product[key]} />
-        );
-      });
 
     return (
       <div>
@@ -105,9 +128,9 @@ class ShowProduct extends Component {
           onEditButtonClicked = {this.goToEditProduct}
           onReturnButtonClicked = {this.goToProductsList}
           title='products'
-          icon='fa fa-shopping-bag fa-2x' />
-        {sections}
-        <ImagesSection title="images" images={product.images} />
+          icon='fa fa-shopping-bag fa-2x'
+        />
+        {this.renderProductInfo(product)}
       </div>
     );
   }
