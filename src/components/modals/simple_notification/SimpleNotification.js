@@ -17,6 +17,7 @@ export default class SimpleNotification extends Component {
     this.confirmationClicked = this.confirmationClicked.bind(this);
     this.modalType = this.modalType.bind(this);
     this.buttonType = this.buttonType.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
   }
 
   /**
@@ -70,13 +71,40 @@ export default class SimpleNotification extends Component {
   }
 
   /**
+   *
+   * @return {ReactNode}
+   */
+  renderButtons() {
+    const acceptButtonType = this.props.loading ?
+      this.buttonType(this.props.type) + ' is-loading' :
+      this.buttonType(this.props.type);
+
+    const cancelButtonType = this.props.loading ?
+      'button is-loading' : 'button';
+
+    return (
+      <footer className="modal-card-foot simple-notification-footer">
+        <button
+          onClick={this.confirmationClicked}
+          className={acceptButtonType}
+        >Accept
+        </button>
+
+        <button
+          onClick={this.closeModal}
+          className={cancelButtonType}>Cancel
+        </button>
+      </footer>
+    );
+  }
+
+  /**
    * @return {ReactNode}
    */
   render() {
     const message = this.props.message;
     const showModal = this.props.show ? 'modal is-active' : 'modal';
     const modalType = this.modalType(this.props.type);
-    const buttonType = this.buttonType(this.props.type);
     return (
       <div className={showModal}>
 
@@ -98,20 +126,7 @@ export default class SimpleNotification extends Component {
 
           </header>
 
-          <footer className="modal-card-foot simple-notification-footer">
-
-            <button
-              onClick={this.confirmationClicked}
-              className={buttonType}
-            >Accept
-            </button>
-
-            <button
-              onClick={this.closeModal}
-              className="button">Cancel
-            </button>
-
-          </footer>
+          {this.renderButtons()}
 
         </div>
       </div>
