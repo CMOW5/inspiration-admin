@@ -46,6 +46,7 @@ class EditProductForm extends Component {
       units: 0,
 
       images: [],
+      // TODO: refactor idsToDelete
       idsToDelete: [],
       newImages: [],
       showEditedModal: false,
