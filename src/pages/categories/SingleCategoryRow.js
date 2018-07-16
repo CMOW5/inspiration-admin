@@ -41,9 +41,7 @@ export default class SingleCategoryRow extends Component {
   render() {
     const name = this.props.category.name;
     const parent = this.props.category.parent_id;
-
-    const images = [...this.props.category.image];
-    const image = images.length ? images[0].url : '';
+    const image = this.props.category.image.url;
 
     return (
 
