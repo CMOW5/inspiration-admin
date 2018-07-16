@@ -3,6 +3,11 @@ import React, {Component} from 'react';
 /* api */
 import ProductsRequest from 'services/api/products/products-request';
 
+/* routes */
+import {withRouter} from 'react-router-dom';
+import routerHandler from 'router/router-handler';
+import categoriesRoutes from 'router/routes/categories-routes';
+
 /* components */
 import SingleCard from '../utils/SingleCard';
 import Loading from 'components/utils/loading/Loading';
@@ -10,7 +15,7 @@ import Loading from 'components/utils/loading/Loading';
 /**
  * products card component
  */
-export default class CategoriesCard extends Component {
+class CategoriesCard extends Component {
   /**
    * @param {*} props
    */
@@ -22,14 +27,22 @@ export default class CategoriesCard extends Component {
       isFetching: true,
     };
     this.getCount = this.getCount.bind(this);
+    this.showCategories = this.showCategories.bind(this);
   }
-
 
   /**
    * get the products info
    */
   componentDidMount() {
     this.getCount();
+  }
+
+  /**
+   *
+   */
+  showCategories() {
+    const route = categoriesRoutes.base();
+    routerHandler.goTo(this.props.history, route);
   }
 
   /**
@@ -55,7 +68,10 @@ export default class CategoriesCard extends Component {
           tag = {this.state.tag}
           count = {this.state.count}
           image = "https://picsum.photos/200/600"
+          onButtonClicked = {this.showCategories}
         />
     );
   }
 }
+
+export default withRouter((CategoriesCard));
