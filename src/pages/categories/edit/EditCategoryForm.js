@@ -35,10 +35,10 @@ class EditCategoryForm extends Component {
       name: '',
       parent_id: '',
       images: [],
+      categories: [],
       idsToDelete: [],
       newImages: [],
       showEditedModal: false,
-      categories: [],
       form: new Form({
         name: '',
         parent_id: '',
@@ -73,7 +73,7 @@ class EditCategoryForm extends Component {
       .then(([category, categories]) => {
         console.log('categories = ', categories);
         this.setState({
-          categories: categories.categories,
+          categories: categories,
           ...category,
         });
       });
