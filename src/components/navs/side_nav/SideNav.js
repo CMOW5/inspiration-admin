@@ -9,12 +9,15 @@ import {withRouter} from 'react-router-dom';
 import RouterHandler from 'router/router-handler';
 import BaseRoutes from 'router/routes/base-routes';
 import ProductRoutes from 'router/routes/products-routes';
+import CategoriesRoutes from 'router/routes/categories-routes';
+
 
 /* styles */
 import './side-nav.css';
 
 /**
  * main navbar component
+ * TODO: improve the side nav show/hide behavior
  */
 class SideNav extends Component {
   /**
@@ -28,8 +31,9 @@ class SideNav extends Component {
       to hide/show the sidenav */
     this.sideNavRef = React.createRef();
     /* methods bindings */
-    this.goToProducts = this.goToProducts.bind(this);
     this.goToDahsBoard = this.goToDahsBoard.bind(this);
+    this.goToProducts = this.goToProducts.bind(this);
+    this.goToCategories = this.goToCategories.bind(this);
     this.toggleNav = this.toggleNav.bind(this);
     this.closeNav = this.closeNav.bind(this);
   }
@@ -59,6 +63,14 @@ class SideNav extends Component {
    */
   goToProducts() {
     const route = ProductRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
+  }
+
+  /**
+   * go to the products list
+   */
+  goToCategories() {
+    const route = CategoriesRoutes.base();
     RouterHandler.goTo(this.props.history, route);
   }
 
@@ -109,7 +121,9 @@ class SideNav extends Component {
             <span>Products</span>
           </i>
         </a>
-        <a className="nav-item">
+        <a
+          onClick = {this.goToCategories}
+          className="nav-item">
           <i className="fa fa-sitemap">
             <span>Categories</span>
           </i>
