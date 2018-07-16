@@ -21,7 +21,7 @@ import Logger from 'utils/logger/logger';
 import ListHeader from 'pages/utils/list_headers/ListHeader';
 import SingleCategoryRow from './SingleCategoryRow';
 import Pagination from 'components/pagination/Pagination';
-// import DeleteProductModal from './delete/DeleteProductModal';
+import Loading from 'components/utils/loading/Loading';
 
 /**
  * a list to show the categories list
@@ -38,6 +38,7 @@ class CategoriesList extends Component {
       selectedCategory: {},
       showDeleteModal: false,
       searchKeyword: '',
+      isFetching: true,
     };
     this.componentName = 'CategoriesList';
     this.fetchCategories = this.fetchCategories.bind(this);
@@ -52,6 +53,7 @@ class CategoriesList extends Component {
     this.onDeleteSucess = this.onDeleteSucess.bind(this);
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.searchCategories = this.searchCategories.bind(this);
+    this.renderMainTable = this.renderMainTable.bind(this);
   }
 
   /**
@@ -59,8 +61,11 @@ class CategoriesList extends Component {
    */
   componentDidMount() {
     Logger.log(this.componentName + 'componentDidMount');
-    // check if the user is logged
-    this.fetchCategories();
+
+    /* show a loading icon an them fetch the categories */
+    this.setState({
+      isFetching: true,
+    }, this.fetchCategories);
   }
 
   /**
@@ -154,20 +159,25 @@ class CategoriesList extends Component {
    */
   async fetchCategories(params={}, url) {
     params.keyword = this.state.searchKeyword;
-    const response = await categoriesRequest.fetchAllCategories();
+    const categories = await categoriesRequest.fetchAllCategories();
     // const response = await categoriesRequest.fetchCategories(params, url);
     this.setState({
-      categories: response.categories,
+      categories: categories,
+      isFetching: false,
       // paginator: new Paginator(response.paginator),
     });
   }
 
   /**
+   * @param {array} categories
    * @return {ReactNode}
    */
-  render() {
-    Logger.log(this.componentName + 'render');
-    const categoriesRows = this.state.categories.map((category) => {
+  renderMainTable(categories) {
+    if (this.state.isFetching) {
+      return <Loading show={true} title="categories" />;
+    }
+
+    const categoriesRows = categories.map((category) => {
       return <SingleCategoryRow
         category = {category}
         key = {category.id}
@@ -178,6 +188,31 @@ class CategoriesList extends Component {
     });
 
     return (
+      <table className="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>name</th>
+            <th>parent</th>
+            <th><abbr title="image">image</abbr></th>
+            <th>actions</th>
+          </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+          {categoriesRows}
+        </tbody>
+      </table>
+    );
+  }
+
+  /**
+   * @return {ReactNode}
+   */
+  render() {
+    Logger.log(this.componentName + 'render');
+
+    return (
       <div>
         <ListHeader
           title = 'categories'
@@ -185,21 +220,8 @@ class CategoriesList extends Component {
           onClick = {this.createCategory}
           onSearch = {this.searchCategories}
         />
-        <table className="table is-fullwidth">
-          <thead>
-            <tr>
-              <th>name</th>
-              <th>parent</th>
-              <th><abbr title="image">image</abbr></th>
-              <th>actions</th>
-            </tr>
-          </thead>
-          <tfoot>
-          </tfoot>
-          <tbody>
-            {categoriesRows}
-          </tbody>
-        </table>
+
+        {this.renderMainTable(this.state.categories)}
 
         <Pagination
           paginator = {this.state.paginator}
