@@ -40,7 +40,7 @@ class ShowCategory extends Component {
       },
     };
     this.hiddenFields = [
-      'id', 'image',
+      'id', 'image', 'subcategories',
     ];
     this.getCategory = this.getCategory.bind(this);
     this.goToCategoriesList = this.goToCategoriesList.bind(this);
@@ -85,6 +85,7 @@ class ShowCategory extends Component {
 
   /**
    * @return {ReactNode}
+   * TODO: shows the subcategories
    */
   render() {
     const category = this.state.category;
