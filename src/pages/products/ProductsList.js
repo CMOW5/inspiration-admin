@@ -128,6 +128,7 @@ class ProductList extends Component {
 
   /**
    * @param {string|number} page
+   * TODO: improve the fetch products call
    */
   pageSelected(page) {
     if (Number.isInteger(page)) {
