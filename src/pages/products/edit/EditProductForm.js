@@ -234,6 +234,7 @@ class EditProductForm extends Component {
    * yet
    *
    * @return {ReactNode}
+   * TODO: refactor this code
    */
   renderProductInfo() {
     if (this.state.isFetching) {
