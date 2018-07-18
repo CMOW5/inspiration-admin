@@ -22,6 +22,7 @@ import './show-category.css';
 
 /* components */
 import ShowHeader from 'pages/utils/list_headers/ShowHeader';
+import Loading from 'components/utils/loading/Loading';
 
 /**
  * component to display the category details
@@ -38,6 +39,7 @@ class ShowCategory extends Component {
       category: {
         image: [],
       },
+      isFetching: true,
     };
     this.hiddenFields = [
       'id', 'image', 'subcategories',
@@ -45,6 +47,7 @@ class ShowCategory extends Component {
     this.getCategory = this.getCategory.bind(this);
     this.goToCategoriesList = this.goToCategoriesList.bind(this);
     this.goToEditCategory = this.goToEditCategory.bind(this);
+    this.renderCategoryInfo = this.renderCategoryInfo.bind(this);
   }
 
   /**
@@ -62,6 +65,7 @@ class ShowCategory extends Component {
     const category = await categoriesRequest.fetchCategory(id);
     this.setState({
       category: category,
+      isFetching: false,
     });
   }
 
@@ -82,14 +86,16 @@ class ShowCategory extends Component {
     RouterHandler.goTo(this.props.history, route);
   }
 
-
   /**
+   *
+   * @param {object} category
    * @return {ReactNode}
-   * TODO: shows the subcategories
    */
-  render() {
-    const category = this.state.category;
-    const sections =
+  renderCategoryInfo(category) {
+    if (this.state.isFetching) {
+      return <Loading show={true} title="category" />;
+    } else {
+      const categorySections =
       Object.keys(category).filter((key) => {
         return !this.hiddenFields.includes(key);
       }).map((key, index) => {
@@ -98,6 +104,21 @@ class ShowCategory extends Component {
         );
       });
 
+      return (
+        <div>
+          {categorySections}
+          <ImagesSection title="images" images={[category.image]} />
+        </div>
+      );
+    }
+  }
+
+  /**
+   * @return {ReactNode}
+   * TODO: shows the subcategories
+   */
+  render() {
+    const category = this.state.category;
     return (
       <div>
         <ShowHeader
@@ -106,10 +127,7 @@ class ShowCategory extends Component {
           title='category'
           icon='fa fa-shopping-bag fa-2x'
         />
-
-        {sections}
-
-        <ImagesSection title="images" images={[category.image]} />
+        {this.renderCategoryInfo(category)}
       </div>
     );
   }
@@ -165,6 +183,9 @@ function Section(props) {
 function ImagesSection(props) {
   const title = props.title;
   const images = props.images.map((image, index) => {
+
+    if (image == null) return null;
+
     return (
       <div className="column is-2" key={index} >
         <img className="product-image" src={image.url} alt="product" />
