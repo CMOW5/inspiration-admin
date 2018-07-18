@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 /* api */
-import ProductsRequest from 'services/api/products/products-request';
+import CategoriesRequest from 'services/api/categories/categories-request';
 
 /* routes */
 import {withRouter} from 'react-router-dom';
@@ -49,8 +49,7 @@ class CategoriesCard extends Component {
    *
    */
   async getCount() {
-    // const request = new ProductsRequest();
-    const count = await ProductsRequest.count();
+    const count = await CategoriesRequest.count();
     this.setState({
       count: count,
       isFetching: false,
