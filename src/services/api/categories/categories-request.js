@@ -9,6 +9,13 @@ import logger from 'utils/logger/logger';
  */
 export default class CategoriesRequest {
   /**
+   * @return {string}
+   */
+  static className() {
+    return 'CategoriesRequest';
+  }
+
+  /**
    * get the total categories count
    * @return {Promise}
    */
@@ -51,17 +58,19 @@ export default class CategoriesRequest {
   /**
    * fetch all the categories
    *
-   * @param {string} page
+   * @param {object} queryParams
+   * @param {string} optionalUrl
    * @return {Promise}
    */
-  static fetchAllCategories() {
-    let url = categoriesUrls.fetchAllCategories();
+  static fetchAllCategories(queryParams={}, optionalUrl) {
+    let url = categoriesUrls.fetchAllCategories(queryParams, optionalUrl);
 
     return new Promise((resolve, reject) => {
       httpRequester.get(url)
         .then((response) => {
           const categories = response.data.data;
-          resolve(categories);
+          const paginator = response.data.paginator;
+          resolve({categories: categories, paginator: paginator});
         })
         .catch((error) => {
           reject(error);
@@ -76,7 +85,7 @@ export default class CategoriesRequest {
    * @return {Promise} Promise
    */
   static createCategory(data) {
-    const methodName = ' addProduct() ';
+    const methodName = ' createCategory() ';
     logger.log(this.className() + methodName);
 
     let url = categoriesUrls.create();
@@ -85,11 +94,11 @@ export default class CategoriesRequest {
       httpRequester.post(url, data)
         .then((response) => {
           const methodName = ' then(..) ';
-          logger.log(this.className() + methodName + 'data = ' + response);
+          logger.log(this.className() + methodName + 'data = ', response);
 
-          /* get the updated product data */
-          const productData = response.data;
-          resolve(productData);
+          /* get the updated category id */
+          const categoryId = response.data.data.id;
+          resolve(categoryId);
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
@@ -118,9 +127,9 @@ export default class CategoriesRequest {
           const methodName = ' then(..) ';
           logger.log(this.className() + methodName + 'data = ' + response);
 
-          /* get the updated product data */
-          const productData = response.data;
-          resolve(productData);
+          /* get the updated category data */
+          const category = response.data.category;
+          resolve(category);
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
