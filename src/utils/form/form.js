@@ -1,3 +1,5 @@
+import isArray from 'lodash/isArray';
+
 /**
  * this class provides the methods to create a new form object
  * to be sent with an http request an also provides a way
@@ -31,6 +33,7 @@ export default class Form {
    * @param {*} files
    */
   appendFiles(filesKey, files) {
+    if (!files) return;
     this.files[filesKey] = files;
   }
 
@@ -92,10 +95,14 @@ export default class Form {
     if (this.hasFiles()) {
       Object.keys(this.files)
         .forEach((fileKey) => {
-          this.files[fileKey]
-            .forEach((file, index) => {
-              formData.append(`${fileKey}[${index}]`, file);
-            });
+          if (!isArray(this.files.fileKey)) {
+            formData.append(`${fileKey}`, this.files[fileKey]);
+          } else {
+            this.files[fileKey]
+              .forEach((file, index) => {
+                formData.append(`${fileKey}[${index}]`, file);
+              });
+          }
         });
     }
 
@@ -159,6 +166,20 @@ export default class Form {
   clearErrors() {
     this.errors.clear();
   }
+
+  /**
+   * returns a string with the form data values
+   *
+   * @return {string}
+   */
+  toString() {
+    let str = '';
+    const formData = this.getFormData();
+    for (let pair of formData.entries()) {
+      str += JSON.stringify(pair[0]) + JSON.stringify(pair[1]) + '\n';
+    }
+    return str;
+  }
 }
 
 /**
@@ -208,7 +229,9 @@ class Errors {
    * @param {object} errors
    */
   record(errors) {
-    this.errors = errors;
+    if (errors) {
+      this.errors = errors;
+    }
   }
 
   /**
