@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 /* api */
-import ProductsRequest from 'services/api/products/products-request';
+import CategoriesRequest from 'services/api/categories/categories-request';
 
 /* components */
 import SimpleNotification from
@@ -13,7 +13,7 @@ import ErrorNotification from
 /**
  * this component show a simple notification message using a modal
  */
-export default class DeleteProductModal extends Component {
+export default class DeleteCategoryModal extends Component {
   /**
    *
    * @param {*} props
@@ -34,10 +34,9 @@ export default class DeleteProductModal extends Component {
   deleteProduct() {
     // do the http request
     const id = this.props.product.id;
-    ProductsRequest
-      .deleteProduct(id)
+    CategoriesRequest
+      .deleteCategory(id)
       .then((response) => {
-        // show some error notification
         this.props.onDeleteSucess();
       })
       .catch((error) => {
@@ -68,7 +67,7 @@ export default class DeleteProductModal extends Component {
    * @return {ReactNode}
    */
   render() {
-    const product = this.props.product;
+    const category = this.props.category;
     const show = this.props.show;
     const showError = this.state.showError;
     return (
@@ -76,8 +75,8 @@ export default class DeleteProductModal extends Component {
         <SimpleNotification
           show = {show}
           message =
-            {`estas seguro que quieres borrar el producto 
-            ${product.name}?`}
+            {`estas seguro que quieres borrar la categoria 
+            ${category.name}?`}
           type = 'danger'
           onConfirmationButtonClicked = {this.deleteProduct}
           onCancelButtonClicked = {this.closeModal}
