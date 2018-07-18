@@ -85,7 +85,7 @@ class CreateProductForm extends Component {
    * fetch the categories from the db
    */
   async fetchAllCategories() {
-    const categories = await CategoriesRequest.fetchAllCategories();
+    const {categories} = await CategoriesRequest.fetchAllCategories();
     this.setState({
       categories: categories,
     });
