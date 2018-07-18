@@ -16,9 +16,19 @@ export default class ImagePicker extends Component {
     this.state = {
       files: [],
     };
+    /* methods bindings */
     this.removeFile = this.removeFile.bind(this);
     this.handleFilesUpload = this.handleFilesUpload.bind(this);
     this.notifyChangeToParent = this.notifyChangeToParent.bind(this);
+  }
+
+  /**
+   *
+   */
+  componentDidMount() {
+    if (!this.props.singleImage) {
+      this.$files.setAttribute('multiple', '');
+    }
   }
 
   /**
@@ -47,8 +57,15 @@ export default class ImagePicker extends Component {
    */
   handleFilesUpload() {
     // concatenate the current files with the files from the input.
+    let newImages = [];
+    if (this.props.single) {
+      newImages[0] = this.$files.files[0];
+    } else {
+      newImages = [...this.state.files, ...this.$files.files];
+    }
+
     this.setState((prevState) => ({
-      files: [...prevState.files, ...this.$files.files],
+      files: newImages,
     }), this.notifyChangeToParent);
   }
 
@@ -83,7 +100,7 @@ export default class ImagePicker extends Component {
                 this.$files = input;
               }}
               accept="image/*"
-              multiple onChange={this.handleFilesUpload}
+              onChange={this.handleFilesUpload}
             />
             <span className="file-cta">
               <span className="file-icon">

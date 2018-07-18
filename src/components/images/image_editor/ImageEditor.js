@@ -13,13 +13,22 @@ export default class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      files: [...props.initImages],
+      files: props.initImages ? [...props.initImages] : [],
       idsToDelete: [],
     };
     this.removeFile = this.removeFile.bind(this);
     this.handleFilesUpload = this.handleFilesUpload.bind(this);
     this.notifyChangeToParent = this.notifyChangeToParent.bind(this);
     this.appendFiles = this.appendFiles.bind(this);
+  }
+
+  /**
+   * init some component data
+   */
+  componentDidMount() {
+    if (!this.props.singleImage) {
+      this.$files.setAttribute('multiple', '');
+    }
   }
 
   /**
@@ -33,30 +42,7 @@ export default class ImageEditor extends Component {
     if (prevProps.initImages !== this.props.initImages) {
       this.appendFiles(this.props.initImages);
     }
-    /*
-    if (!this.compareArrays(prevProps.initImages, this.props.initImages)) {
-      this.appendFiles(this.props.urls);
-    }
-    */
   }
-
-  /**
-   * @param {array} arr1
-   * @param {array} arr2
-   * @return {boolean}
-   */
-  compareArrays = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) {
-      return false;
-    }
-    for (let i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
 
   /**
    * load the images urls passed from the parent
@@ -64,6 +50,8 @@ export default class ImageEditor extends Component {
    * @param {array} files
    */
   async appendFiles(files) {
+    if (!files) return;
+
     this.setState((prevState) => ({
       files: [...prevState.files, ...files],
     }));
@@ -123,9 +111,18 @@ export default class ImageEditor extends Component {
    * the images
    */
   handleFilesUpload() {
-    // concatenate the current files with the files from the input.
+    let newFiles;
+
+    if (this.props.singleImage) {
+      // choose only the selected file
+      newFiles = [...this.$files.files];
+    } else {
+      // concatenate the current files with the files from the input.
+      newFiles = [...this.state.files, ...this.$files.files];
+    }
+
     this.setState((prevState) => ({
-      files: [...prevState.files, ...this.$files.files],
+      files: newFiles,
     }), this.notifyChangeToParent);
   }
 
@@ -161,7 +158,7 @@ export default class ImageEditor extends Component {
                 this.$files = input;
               }}
               accept="image/*"
-              multiple onChange={this.handleFilesUpload}
+              onChange={this.handleFilesUpload}
             />
             <span className="file-cta">
               <span className="file-icon">
