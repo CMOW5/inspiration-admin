@@ -21,6 +21,7 @@ import Logger from 'utils/logger/logger';
 import ListHeader from 'pages/utils/list_headers/ListHeader';
 import SingleCategoryRow from './SingleCategoryRow';
 import Pagination from 'components/pagination/Pagination';
+import DeleteCategoryModal from './delete/DeleteCategoryModal';
 import Loading from 'components/utils/loading/Loading';
 
 /**
@@ -57,15 +58,13 @@ class CategoriesList extends Component {
   }
 
   /**
-   *
+   * TODO: improve the fetch categories page param
    */
   componentDidMount() {
-    Logger.log(this.componentName + 'componentDidMount');
-
     /* show a loading icon an them fetch the categories */
     this.setState({
       isFetching: true,
-    }, this.fetchCategories);
+    }, () => this.fetchCategories({page: 1}));
   }
 
   /**
@@ -115,7 +114,7 @@ class CategoriesList extends Component {
     this.setState({
       selectedCategory: {},
       showDeleteModal: false,
-    }, this.fetchCategories);
+    }, () => this.fetchCategories({page: 1}));
   }
 
   /**
@@ -149,7 +148,7 @@ class CategoriesList extends Component {
   searchCategories(keyword) {
     this.setState(({
       searchKeyword: keyword,
-    }), this.fetchCategories);
+    }), () => this.fetchCategories({page: 1}));
   }
 
   /**
@@ -159,12 +158,12 @@ class CategoriesList extends Component {
    */
   async fetchCategories(params={}, url) {
     params.keyword = this.state.searchKeyword;
-    const categories = await categoriesRequest.fetchAllCategories();
-    // const response = await categoriesRequest.fetchCategories(params, url);
+    const {categories, paginator}
+       = await categoriesRequest.fetchAllCategories(params, url);
     this.setState({
       categories: categories,
+      paginator: new Paginator(paginator),
       isFetching: false,
-      // paginator: new Paginator(response.paginator),
     });
   }
 
@@ -210,8 +209,6 @@ class CategoriesList extends Component {
    * @return {ReactNode}
    */
   render() {
-    Logger.log(this.componentName + 'render');
-
     return (
       <div>
         <ListHeader
@@ -227,14 +224,13 @@ class CategoriesList extends Component {
           paginator = {this.state.paginator}
           onPageSelected = {this.pageSelected}
         />
-        {/*
-        <DeleteProductModal
+
+        <DeleteCategoryModal
           show = {this.state.showDeleteModal}
-          product = {this.state.selectedProduct}
+          category = {this.state.selectedCategory}
           onDeleteSucess = {this.onDeleteSucess}
           onDeleteCancel = {this.onDeleteCancel}
         />
-        */}
 
       </div>
 
