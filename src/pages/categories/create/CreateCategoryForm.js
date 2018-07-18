@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 
 /* api */
 import CategoriesRequest from 'services/api/categories/categories-request';
-import ProductsRequest from 'services/api/products/products-request';
 
 /* router */
 import {withRouter} from 'react-router-dom';
 import RouterHandler from 'router/router-handler';
-import ProductsRoutes from 'router/routes/products-routes';
+import CategoriesRoutes from 'router/routes/categories-routes';
 
 /* utils */
 import Form from 'utils/form/form';
@@ -18,14 +17,15 @@ import CreateHeader from 'pages/utils/list_headers/CreateHeader';
 import ImagePicker from 'components/images/image_picker/ImagePicker';
 import SimpleNotification
   from 'components/modals/simple_notification/SimpleNotification';
+import LoadingModal from 'components/modals/loading/LoadingModal';
 
 /* styles */
-import './create-product-form.css';
+import './create-category-form.css';
 
 /**
- * this component handles the product creation
+ * this component handles the category creation
  */
-class CreateProductForm extends Component {
+class CreateCategoryForm extends Component {
   /**
    * @param {Object} props
    */
@@ -33,37 +33,25 @@ class CreateProductForm extends Component {
     super(props);
     this.state = {
       name: '',
-      description: '',
-      price: '',
-      price_sale: '',
-      in_sale: false,
-      active: true,
-      category_id: '',
-      weight: 0,
-      units: 1,
-      images: [],
+      parent_id: '',
+      image: [],
       categories: [],
+      createdCategoryId: null,
+      showCreatingModal: false,
       form: new Form({
         name: '',
-        description: '',
-        price: '',
-        price_sale: '',
-        in_sale: false,
-        active: true,
-        category_id: '',
-        weight: 0,
-        units: 1,
+        parent_id: null,
       }),
       showCreatedModal: false,
     };
     this.fetchAllCategories = this.fetchAllCategories.bind(this);
-    this.saveImages = this.saveImages.bind(this);
+    this.saveImage = this.saveImage.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.cancel = this.cancel.bind(this);
     this.sendForm = this.sendForm.bind(this);
-    this.showProductCreatedModal = this.showProductCreatedModal.bind(this);
-    this.goToShowProduct = this.goToShowProduct.bind(this);
+    this.showCategoryCreatedModal = this.showCategoryCreatedModal.bind(this);
+    this.goToShowCategory = this.goToShowCategory.bind(this);
 
     /* helpers to calculate the form styles */
     this.inputClass = this.inputClass.bind(this);
@@ -85,7 +73,7 @@ class CreateProductForm extends Component {
    * fetch the categories from the db
    */
   async fetchAllCategories() {
-    const categories = await CategoriesRequest.fetchAllCategories();
+    const {categories} = await CategoriesRequest.fetchAllCategories();
     this.setState({
       categories: categories,
     });
@@ -93,11 +81,11 @@ class CreateProductForm extends Component {
 
   /**
    * get the images loaded from the imagePicker component
-   * @param {*} images
+   * @param {*} newImage
    */
-  saveImages(images) {
+  saveImage(newImage) {
     this.setState({
-      images: images,
+      image: newImage.length > 0 ? newImage[0] : null,
     });
   }
 
@@ -122,18 +110,12 @@ class CreateProductForm extends Component {
     event.preventDefault();
     let form = new Form({
       name: this.state.name,
-      description: this.state.description,
-      price: this.state.price,
-      price_sale: this.state.price_sale,
-      in_sale: this.state.in_sale,
-      active: this.state.active,
-      category_id: this.state.category_id,
-      weight: this.state.weight,
-      units: this.state.units,
+      parent_id: this.state.parent_id,
     });
-    form.appendFiles('images', this.state.images);
+    form.appendFiles('image', this.state.image);
     this.setState((prevState) => ({
       form: form,
+      showCreatingModal: true,
     }), this.sendForm);
   }
 
@@ -141,12 +123,12 @@ class CreateProductForm extends Component {
    * send the form to the api
    */
   sendForm() {
-    // Logger.log('form = ', this.state.form);
     const formData = this.state.form.getFormData();
-    ProductsRequest.createProduct(formData)
-      .then((product) => {
-        Logger.log('product created = ', product);
-        this.showProductCreatedModal(product);
+    Logger.log(this.state.form.toString());
+    CategoriesRequest.createCategory(formData)
+      .then((categoryId) => {
+        Logger.log('category id created = ', categoryId);
+        this.showCategoryCreatedModal(categoryId);
       })
       .catch((error) => {
         Logger.log('error = ', error);
@@ -154,26 +136,28 @@ class CreateProductForm extends Component {
         form.saveErrors(error);
         this.setState({
           form: form,
+          showCreatingModal: false,
         });
       });
   }
 
   /**
-   * shows the created product
-   * @param {object} product the created product
+   * shows the created category
+   * @param {object} categoryId the created category' id
    */
-  showProductCreatedModal(product) {
+  showCategoryCreatedModal(categoryId) {
     this.setState({
       showCreatedModal: true,
-      createdProduct: product,
+      showCreatingModal: false,
+      createdCategoryId: categoryId,
     });
   }
 
   /**
-   * redirect the user to the see product page
+   * redirect the user to the see category page
    */
-  goToShowProduct() {
-    const route = ProductsRoutes.show(this.state.createdProduct.id);
+  goToShowCategory() {
+    const route = CategoriesRoutes.show(this.state.createdCategoryId);
     RouterHandler.goTo(this.props.history, route);
   }
 
@@ -255,7 +239,7 @@ class CreateProductForm extends Component {
       <div>
 
         {/* header */}
-        <CreateHeader title='Add Product' icon='fa fa-shopping-bag fa-2x' />
+        <CreateHeader title='Add Category' icon='fa fa-shopping-bag fa-2x' />
 
         <form onSubmit={this.handleSubmit}>
 
@@ -275,135 +259,30 @@ class CreateProductForm extends Component {
 
           </div>
 
-
-          <div className="field">
-            <label className="label">Description</label>
-            <div className="control">
-              <textarea
-                name="description"
-                className={this.textAreaClass('description')}
-                placeholder="Textarea"
-                onChange={this.handleInputChange}
-              >
-              </textarea>
-            </div>
-
-            {this.renderError('description')}
-
-          </div>
-
-          <div className="field">
-            <label className="label">Price</label>
-            <div className="control">
-              <input
-                className={this.inputClass('price')}
-                name="price"
-                type="text"
-                placeholder="Text input"
-                onChange={this.handleInputChange}
-              />
-            </div>
-
-            {this.renderError('price')}
-
-          </div>
-
-          <div className="field">
-            <label className="label">Price Sale</label>
-            <div className="control">
-              <input
-                className={this.inputClass('price_sale')}
-                name="price_sale"
-                type="text"
-                placeholder="Text input"
-                onChange={this.handleInputChange}
-              />
-            </div>
-
-            {this.renderError('price_sale')}
-
-          </div>
-
-          <div className="field">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                name="in_sale"
-                checked={this.state.in_sale}
-                onChange={this.handleInputChange}
-              />
-              &nbsp;&nbsp; In Sale?
-            </label>
-          </div>
-
           <div className="field">
             <label className="label">Category</label>
             <div className="control">
               <div className="select">
                 <select
-                  name="category_id" onChange={this.handleInputChange}
-                  value={this.state.category_id}
+                  name="parent_id" onChange={this.handleInputChange}
+                  value={this.state.parent_id}
                 >
                   {/* default option */}
-                  <option disabled value=''> -- select an option -- </option>
+                  <option value=''>Main Menu</option>
                   {this.renderCategoriesOptions()}
                 </select>
               </div>
             </div>
 
-            {this.renderError('category_id')}
+            {this.renderError('parent_id')}
 
-          </div>
-
-          <div className="field">
-            <label className="label">Weight</label>
-            <div className="control">
-              <input
-                className={this.inputClass('weight')}
-                name="weight"
-                type="text"
-                placeholder="Text input"
-                onChange={this.handleInputChange}
-              />
-            </div>
-
-            {this.renderError('weight')}
-
-          </div>
-
-          <div className="field">
-            <label className="label">Units</label>
-            <div className="control">
-              <input
-                className={this.inputClass('units')}
-                name="units"
-                type="text"
-                placeholder="Text input"
-                onChange={this.handleInputChange}
-              />
-            </div>
-
-            {this.renderError('units')}
-
-          </div>
-
-          <div className="field">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                name="active"
-                checked={this.state.active}
-                onChange={this.handleInputChange}
-              />
-              &nbsp;&nbsp; Active ?
-            </label>
           </div>
 
           <div
             className="field">
-            <label className="label">Images</label>
+            <label className="label">Image</label>
             <div className="control">
-              <ImagePicker onImagesLoaded={this.saveImages}/>
+              <ImagePicker singleImage={true} onImagesLoaded={this.saveImage}/>
             </div>
           </div>
 
@@ -428,14 +307,20 @@ class CreateProductForm extends Component {
 
         <SimpleNotification
           show = {this.state.showCreatedModal}
-          message = "product created!!"
+          message = "category created!!"
           type = 'info'
-          onConfirmationButtonClicked = {this.goToShowProduct}
-          onCancelButtonClicked = {this.goToShowProduct}
+          onConfirmationButtonClicked = {this.goToShowCategory}
+          onCancelButtonClicked = {this.goToShowCategory}
         />
+
+        <LoadingModal
+          show = {this.state.showCreatingModal}
+          message = "creating the product...please wait"
+        />
+
       </div>
     );
   }
 }
 
-export default withRouter(CreateProductForm);
+export default withRouter(CreateCategoryForm);
