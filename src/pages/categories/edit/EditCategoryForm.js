@@ -17,6 +17,8 @@ import EditHeader from 'pages/utils/list_headers/EditHeader';
 import ImageEditor from 'components/images/image_editor/ImageEditor';
 import SimpleNotification
   from 'components/modals/simple_notification/SimpleNotification';
+import Loading from 'components/utils/loading/Loading';
+import LoadingModal from 'components/modals/loading/LoadingModal';
 
 /* styles */
 import './edit-category-form.css';
@@ -34,18 +36,20 @@ class EditCategoryForm extends Component {
       id: this.props.match.params.id,
       name: '',
       parent_id: '',
-      images: [],
+      image: [],
       categories: [],
-      idsToDelete: [],
-      newImages: [],
+      imageIdToDelete: null,
+      newImage: [],
       showEditedModal: false,
+      showEditingModal: false,
+      isFetching: true,
       form: new Form({
         name: '',
         parent_id: '',
       }),
     };
     this.fetchAllCategories = this.fetchAllCategories.bind(this);
-    this.saveImages = this.saveImages.bind(this);
+    this.saveImage = this.saveImage.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendForm = this.sendForm.bind(this);
@@ -60,6 +64,8 @@ class EditCategoryForm extends Component {
     /* render methods */
     this.renderCategoriesOptions = this.renderCategoriesOptions.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.renderCategoryForm = this.renderCategoryForm.bind(this);
+    this.renderCategoryInfo = this.renderCategoryInfo.bind(this);
   }
 
   /**
@@ -75,6 +81,8 @@ class EditCategoryForm extends Component {
         this.setState({
           categories: categories,
           ...category,
+          image: category.image ? [category.image] : [],
+          isFetching: false,
         });
       });
   }
@@ -94,19 +102,19 @@ class EditCategoryForm extends Component {
    * @return {Object}
    */
   async fetchAllCategories() {
-    const categories = await categoriesRequest.fetchAllCategories();
+    const {categories} = await categoriesRequest.fetchAllCategories();
     return categories;
   }
 
   /**
    * get the images loaded from the imagePicker component
-   * @param {*} newImages
-   * @param {*} idsToDelete
+   * @param {array} newImage
+   * @param {array} imageIdToDelete
    */
-  saveImages(newImages, idsToDelete) {
+  saveImage(newImage, imageIdToDelete) {
     this.setState({
-      newImages: newImages,
-      idsToDelete: idsToDelete,
+      newImage: newImage.length > 0 ? newImage[0] : null,
+      imageIdToDelete: imageIdToDelete.length > 0 ? imageIdToDelete[0] : null,
     });
   }
 
@@ -131,13 +139,14 @@ class EditCategoryForm extends Component {
     event.preventDefault();
     let form = new Form({
       name: this.state.name,
-      parent_id: this.state.category_id,
-      idsToDelete: this.state.idsToDelete,
+      parent_id: this.state.parent_id,
+      imageIdToDelete: this.state.imageIdToDelete,
     });
-    form.appendFiles('images', this.state.newImages);
+    form.appendFiles('image', this.state.newImage);
     form.setPutMethod();
     this.setState({
       form: form,
+      showEditingModal: true,
     }, this.sendForm);
   }
 
@@ -145,7 +154,6 @@ class EditCategoryForm extends Component {
    * send the form to the api
    */
   sendForm() {
-    // Logger.log('form = ', this.state.form);
     const formData = this.state.form.getFormData();
     const id = this.state.id;
 
@@ -160,6 +168,7 @@ class EditCategoryForm extends Component {
         form.saveErrors(error);
         this.setState({
           form: form,
+          showEditingModal: false,
         });
       });
   }
@@ -170,6 +179,7 @@ class EditCategoryForm extends Component {
   showCategoryEditedModal() {
     this.setState({
       showEditedModal: true,
+      showEditingModal: false,
     });
   }
 
@@ -251,6 +261,94 @@ class EditCategoryForm extends Component {
   }
 
   /**
+   * show the form with the product info
+   * or a loading icon if the product is not fetched
+   * yet
+   *
+   * @return {ReactNode}
+   */
+  renderCategoryInfo() {
+    if (this.state.isFetching) {
+      return <Loading show="true" title="category" />;
+    } else {
+      return this.renderCategoryForm();
+    }
+  }
+
+  /**
+   * @return {ReactNode} a form with the category data
+   */
+  renderCategoryForm() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+
+        <div className="field">
+          <label className="label">Name</label>
+          <div className="control">
+            <input
+              className={this.inputClass('name')}
+              name="name"
+              type="text"
+              placeholder="name"
+              value={this.state.name}
+              onChange={this.handleInputChange}
+            />
+          </div>
+
+          {this.renderError('name')}
+
+        </div>
+
+        <div className="field">
+          <label className="label">Category</label>
+          <div className="control">
+            <div className="select">
+              <select
+                name="parent_id"
+                onChange={this.handleInputChange}
+                value={this.state.parent_id || ''}
+              >
+                {/* default option */}
+                <option value=''>Main Menu</option>
+                {this.renderCategoriesOptions()}
+              </select>
+            </div>
+          </div>
+
+          {this.renderError('parent_id')}
+
+        </div>
+
+        <div
+          className="field">
+          <label className="label">Images</label>
+          <div className="control">
+            <ImageEditor
+              initImages={this.state.image}
+              onImagesLoaded={this.saveImage}
+              singleImage={true}
+            />
+          </div>
+        </div>
+
+        <div className="field is-grouped">
+          <div className="control">
+            <button
+              className="button is-link"
+              onClick={this.handleSubmit}
+            >Submit
+            </button>
+          </div>
+          <div className="control">
+            <button className="button is-text">Cancel</button>
+          </div>
+        </div>
+
+      </form>
+    );
+  }
+
+  /**
    * @return {ReactNode}
    */
   render() {
@@ -264,69 +362,7 @@ class EditCategoryForm extends Component {
           onReturnButtonClicked = {this.goToCategoriesList}
         />
 
-        <form onSubmit={this.handleSubmit}>
-
-          <div className="field">
-            <label className="label">Name</label>
-            <div className="control">
-              <input
-                className={this.inputClass('name')}
-                name="name"
-                type="text"
-                placeholder="name"
-                value={this.state.name}
-                onChange={this.handleInputChange}
-              />
-            </div>
-
-            {this.renderError('name')}
-
-          </div>
-
-          <div className="field">
-            <label className="label">Category</label>
-            <div className="control">
-              <div className="select">
-                <select
-                  name="parent_id" onChange={this.handleInputChange}
-                  value={this.state.parent_id || ''}
-                >
-                  {/* default option */}
-                  <option disabled value=''> -- select an option -- </option>
-                  {this.renderCategoriesOptions()}
-                </select>
-              </div>
-            </div>
-
-            {this.renderError('parent_id')}
-
-          </div>
-
-          <div
-            className="field">
-            <label className="label">Images</label>
-            <div className="control">
-              <ImageEditor
-                initImages={this.state.images}
-                onImagesLoaded={this.saveImages}
-              />
-            </div>
-          </div>
-
-          <div className="field is-grouped">
-            <div className="control">
-              <button
-                className="button is-link"
-                onClick={this.handleSubmit}
-              >Submit
-              </button>
-            </div>
-            <div className="control">
-              <button className="button is-text">Cancel</button>
-            </div>
-          </div>
-
-        </form>
+        {this.renderCategoryInfo()}
 
         <SimpleNotification
           show = {this.state.showEditedModal}
@@ -334,6 +370,11 @@ class EditCategoryForm extends Component {
           type = 'info'
           onConfirmationButtonClicked = {this.goToShowCategory}
           onCancelButtonClicked = {this.goToShowCategory}
+        />
+
+        <LoadingModal
+          show = {this.state.showEditingModal}
+          message = "editing the category...please wait"
         />
 
       </div>
