@@ -27,8 +27,9 @@ import CreateProductForm from 'pages/products/create/CreateProductForm';
 import EditProductForm from 'pages/products/edit/EditProductForm';
 
 // categories
-import ShowCategory from 'pages/categories/show/ShowCategory';
 import CategoriesList from 'pages/categories/CategoriesList';
+import ShowCategory from 'pages/categories/show/ShowCategory';
+import CreateCategoryForm from 'pages/categories/create/CreateCategoryForm';
 import EditCategoryForm from 'pages/categories/edit/EditCategoryForm';
 
 
@@ -79,6 +80,7 @@ export default class Main extends Component {
     /* categories routes */
     const categoriesListRoute = categoriesRoutes.base();
     const categoryShowRoute = categoriesRoutes.show();
+    const categoriesCreateRoute = categoriesRoutes.create();
     const categoriesEditRoute = categoriesRoutes.edit();
 
     return (
@@ -116,6 +118,8 @@ export default class Main extends Component {
               {/* categories */}
               <Route exact path = {categoriesListRoute}
                 component = {CategoriesList} />
+              <Route exact path ={categoriesCreateRoute}
+                component = {CreateCategoryForm} />
               <Route exact path = {categoryShowRoute}
                 component = {ShowCategory} />
               <Route exact path = {categoriesEditRoute}
