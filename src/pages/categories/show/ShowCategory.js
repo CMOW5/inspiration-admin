@@ -42,7 +42,7 @@ class ShowCategory extends Component {
       isFetching: true,
     };
     this.hiddenFields = [
-      'id', 'image', 'subcategories',
+      'id', 'image', 'subcategories', 'parent_id',
     ];
     this.getCategory = this.getCategory.bind(this);
     this.goToCategoriesList = this.goToCategoriesList.bind(this);
