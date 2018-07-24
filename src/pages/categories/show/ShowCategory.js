@@ -183,7 +183,6 @@ function Section(props) {
 function ImagesSection(props) {
   const title = props.title;
   const images = props.images.map((image, index) => {
-
     if (image == null) return null;
 
     return (
