@@ -93,9 +93,9 @@ class EditProductForm extends Component {
       this.getProduct(this.state.id),
       this.fetchAllCategories(),
     ])
-      .then(([product, categories]) => {
+      .then(([product, categoriesResponse]) => {
         this.setState({
-          categories: categories,
+          categories: categoriesResponse.categories,
           ...product,
           isFetching: false,
         });
