@@ -17,6 +17,8 @@ export default class RouterHandler {
 
     if (currentPath !== path) {
       history.push(newLocation);
+    } else {
+      history.replace(newLocation);
     }
   }
 }
