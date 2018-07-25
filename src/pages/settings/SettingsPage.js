@@ -435,7 +435,7 @@ class SettingsPage extends Component {
 
         <SimpleNotification
           show = {this.state.showEditedModal}
-          message = "product edited!!"
+          message = "site edited!!"
           type = 'info'
           onConfirmationButtonClicked = {this.reloadSettingsPage}
           onCancelButtonClicked = {this.reloadSettingsPage}
@@ -443,7 +443,7 @@ class SettingsPage extends Component {
 
         <LoadingModal
           show = {this.state.showEditingModal}
-          message = "editing the product...please wait"
+          message = "editing the site data...please wait"
         />
 
       </div>
