@@ -132,9 +132,9 @@ class CreateProductForm extends Component {
       units: this.state.units,
     });
     form.appendFiles('images', this.state.images);
-    this.setState((prevState) => ({
+    this.setState({
       form: form,
-    }), this.sendForm);
+    }, this.sendForm);
   }
 
   /**
@@ -143,6 +143,7 @@ class CreateProductForm extends Component {
   sendForm() {
     // Logger.log('form = ', this.state.form);
     const formData = this.state.form.getFormData();
+    Logger.log('form data = ', this.state.form.toString());
     ProductsRequest.createProduct(formData)
       .then((product) => {
         Logger.log('product created = ', product);
