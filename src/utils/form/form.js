@@ -95,7 +95,7 @@ export default class Form {
     if (this.hasFiles()) {
       Object.keys(this.files)
         .forEach((fileKey) => {
-          if (!isArray(this.files.fileKey)) {
+          if (!isArray(this.files[fileKey])) {
             formData.append(`${fileKey}`, this.files[fileKey]);
           } else {
             this.files[fileKey]
