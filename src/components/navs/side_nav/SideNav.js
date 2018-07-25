@@ -10,6 +10,7 @@ import RouterHandler from 'router/router-handler';
 import BaseRoutes from 'router/routes/base-routes';
 import ProductRoutes from 'router/routes/products-routes';
 import CategoriesRoutes from 'router/routes/categories-routes';
+import SettingsRoutes from 'router/routes/settings-routes';
 
 
 /* styles */
@@ -34,6 +35,7 @@ class SideNav extends Component {
     this.goToDahsBoard = this.goToDahsBoard.bind(this);
     this.goToProducts = this.goToProducts.bind(this);
     this.goToCategories = this.goToCategories.bind(this);
+    this.goToSettings = this.goToSettings.bind(this);
     this.toggleNav = this.toggleNav.bind(this);
     this.closeNav = this.closeNav.bind(this);
   }
@@ -71,6 +73,14 @@ class SideNav extends Component {
    */
   goToCategories() {
     const route = CategoriesRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
+  }
+
+  /**
+   * go to the products list
+   */
+  goToSettings() {
+    const route = SettingsRoutes.base();
     RouterHandler.goTo(this.props.history, route);
   }
 
@@ -131,6 +141,13 @@ class SideNav extends Component {
         <a className="nav-item">
           <i className="fa fa-users">
             <span>Users</span>
+          </i>
+        </a>
+        <a
+          onClick = {this.goToSettings}
+          className="nav-item">
+          <i className="fa fa-cog">
+            <span>Settings</span>
           </i>
         </a>
       </aside>
