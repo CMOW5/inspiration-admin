@@ -9,16 +9,16 @@ import './main.css';
 /* utils */
 import Logger from 'utils/logger/logger';
 
-/* components */
-import MainNavBar from 'components/navs/main_nav/MainNavBar';
-import SideNav from 'components/navs/side_nav/SideNav';
-import DashBoard from 'pages/dashboard/DashBoard';
-
 /* routes */
 import baseRoutes from 'router/routes/base-routes';
 import productsRoutes from 'router/routes/products-routes';
 import categoriesRoutes from 'router/routes/categories-routes';
+import settingsRoutes from 'router/routes/settings-routes';
 
+/* components */
+import MainNavBar from 'components/navs/main_nav/MainNavBar';
+import SideNav from 'components/navs/side_nav/SideNav';
+import DashBoard from 'pages/dashboard/DashBoard';
 
 // products
 import ProductsList from 'pages/products/ProductsList';
@@ -32,6 +32,8 @@ import ShowCategory from 'pages/categories/show/ShowCategory';
 import CreateCategoryForm from 'pages/categories/create/CreateCategoryForm';
 import EditCategoryForm from 'pages/categories/edit/EditCategoryForm';
 
+// settings
+import SettingsPage from 'pages/settings/SettingsPage';
 
 import Footer from 'components/footer/Footer';
 
@@ -82,6 +84,8 @@ export default class Main extends Component {
     const categoryShowRoute = categoriesRoutes.show();
     const categoriesCreateRoute = categoriesRoutes.create();
     const categoriesEditRoute = categoriesRoutes.edit();
+    /* settings route */
+    const settingsRoute = settingsRoutes.base();
 
     return (
 
@@ -124,6 +128,10 @@ export default class Main extends Component {
                 component = {ShowCategory} />
               <Route exact path = {categoriesEditRoute}
                 component = {EditCategoryForm}/>
+
+              {/* settings */}
+              <Route exact path = {settingsRoute}
+                component = {SettingsPage}/>
 
             </Switch>
 
