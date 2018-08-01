@@ -126,9 +126,9 @@ class CreateCategoryForm extends Component {
     const formData = this.state.form.getFormData();
     Logger.log(this.state.form.toString());
     CategoriesRequest.createCategory(formData)
-      .then((categoryId) => {
-        Logger.log('category id created = ', categoryId);
-        this.showCategoryCreatedModal(categoryId);
+      .then((category) => {
+        Logger.log('category created = ', category);
+        this.showCategoryCreatedModal(category.id);
       })
       .catch((error) => {
         Logger.log('error = ', error);
@@ -315,7 +315,7 @@ class CreateCategoryForm extends Component {
 
         <LoadingModal
           show = {this.state.showCreatingModal}
-          message = "creating the product...please wait"
+          message = "creating the category...please wait"
         />
 
       </div>
