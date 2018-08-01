@@ -60,22 +60,24 @@ export default class CategoriesUrls extends BaseUrls {
    * @return {string}
    */
   static create() {
-    return this.base() + '/admin/categories/';
+    return this.base() + '/admin/categories';
   }
 
   /**
    * url to update a category in the db
+   * @param {number} id the category id
    * @return {string}
    */
-  static update() {
-    return this.base() + '/admin/categories/';
+  static update(id) {
+    return this.base() + `/admin/categories/${id}`;
   }
 
   /**
    * url to delete a category in the db
+   * @param {number} id the category id
    * @return {string}
    */
-  static delete() {
-    return this.base() + '/admin/categories/';
+  static delete(id) {
+    return this.base() + `/admin/categories/${id}`;
   }
 }

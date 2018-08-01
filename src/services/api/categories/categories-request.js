@@ -119,7 +119,7 @@ export default class CategoriesRequest {
     const methodName = ' updateProduct() ';
     logger.log(this.className() + methodName);
 
-    let url = categoriesUrls.update() + id;
+    let url = categoriesUrls.update(id);
 
     return new Promise((resolve, reject) => {
       httpRequester.post(url, data)
@@ -147,7 +147,7 @@ export default class CategoriesRequest {
    */
   static deleteCategory(id) {
     const methodName = ' deleteProduct() ';
-    let url = categoriesUrls.delete() + id;
+    let url = categoriesUrls.delete(id);
     logger.log(this.className() + methodName);
 
     return new Promise((resolve, reject) => {
