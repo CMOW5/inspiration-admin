@@ -18,6 +18,7 @@ import CreateHeader from 'pages/utils/list_headers/CreateHeader';
 import ImagePicker from 'components/images/image_picker/ImagePicker';
 import SimpleNotification
   from 'components/modals/simple_notification/SimpleNotification';
+import LoadingModal from 'components/modals/loading/LoadingModal';
 
 /* styles */
 import './create-product-form.css';
@@ -43,6 +44,7 @@ class CreateProductForm extends Component {
       units: 1,
       images: [],
       categories: [],
+      showCreatingModal: false,
       form: new Form({
         name: '',
         description: '',
@@ -134,6 +136,7 @@ class CreateProductForm extends Component {
     form.appendFiles('images', this.state.images);
     this.setState({
       form: form,
+      showCreatingModal: true,
     }, this.sendForm);
   }
 
@@ -155,6 +158,7 @@ class CreateProductForm extends Component {
         form.saveErrors(error);
         this.setState({
           form: form,
+          showCreatingModal: false,
         });
       });
   }
@@ -166,6 +170,7 @@ class CreateProductForm extends Component {
   showProductCreatedModal(product) {
     this.setState({
       showCreatedModal: true,
+      showCreatingModal: false,
       createdProduct: product,
     });
   }
@@ -434,6 +439,12 @@ class CreateProductForm extends Component {
           onConfirmationButtonClicked = {this.goToShowProduct}
           onCancelButtonClicked = {this.goToShowProduct}
         />
+
+        <LoadingModal
+          show = {this.state.showCreatingModal}
+          message = "creating the product...please wait"
+        />
+
       </div>
     );
   }
