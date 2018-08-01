@@ -25,15 +25,15 @@ export default class DeleteCategoryModal extends Component {
     };
     this.closeModal = this.closeModal.bind(this);
     this.closeErrorModal = this.closeErrorModal.bind(this);
-    this.deleteProduct = this.deleteProduct.bind(this);
+    this.deleteCategory = this.deleteCategory.bind(this);
   }
 
   /**
    * notify the parent that the confirmation button was clicked
    */
-  deleteProduct() {
+  deleteCategory() {
     // do the http request
-    const id = this.props.product.id;
+    const id = this.props.category.id;
     CategoriesRequest
       .deleteCategory(id)
       .then((response) => {
@@ -78,7 +78,7 @@ export default class DeleteCategoryModal extends Component {
             {`estas seguro que quieres borrar la categoria 
             ${category.name}?`}
           type = 'danger'
-          onConfirmationButtonClicked = {this.deleteProduct}
+          onConfirmationButtonClicked = {this.deleteCategory}
           onCancelButtonClicked = {this.closeModal}
         />
 
