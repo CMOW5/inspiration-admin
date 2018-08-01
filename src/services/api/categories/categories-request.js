@@ -96,9 +96,9 @@ export default class CategoriesRequest {
           const methodName = ' then(..) ';
           logger.log(this.className() + methodName + 'data = ', response);
 
-          /* get the updated category id */
-          const categoryId = response.data.data.id;
-          resolve(categoryId);
+          /* get the updated category data */
+          const category = response.data.data.category;
+          resolve(category);
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
@@ -128,7 +128,7 @@ export default class CategoriesRequest {
           logger.log(this.className() + methodName + 'data = ' + response);
 
           /* get the updated category data */
-          const category = response.data.category;
+          const category = response.data.data.category;
           resolve(category);
         })
         .catch((error) => {
