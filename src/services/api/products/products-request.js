@@ -98,7 +98,7 @@ export default class ProductsRequest {
           Logger.log(this.className() + methodName + 'data = ' + response);
 
           /* get the created product data */
-          const productData = response.data.data;
+          const productData = response.data.data.product;
           resolve(productData);
         })
         .catch((error) => {
@@ -128,7 +128,7 @@ export default class ProductsRequest {
           Logger.log(this.className() + methodName + 'data = ' + response);
 
           /* get the updated product data */
-          const productData = response.data;
+          const productData = response.data.data.product;
           resolve(productData);
         })
         .catch((error) => {
