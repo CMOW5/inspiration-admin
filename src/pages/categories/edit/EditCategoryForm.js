@@ -77,9 +77,10 @@ class EditCategoryForm extends Component {
       this.fetchAllCategories(),
     ])
       .then(([category, categories]) => {
-        console.log('categories = ', categories);
         this.setState({
-          categories: categories,
+          categories: categories.filter((category) => {
+            return category.id !== parseInt(this.state.id, 10);
+          }),
           ...category,
           image: category.image ? [category.image] : [],
           isFetching: false,
