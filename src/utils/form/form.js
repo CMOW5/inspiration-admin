@@ -83,8 +83,7 @@ export default class Form {
     let formData = new FormData();
 
     Object.keys(this.originalData).forEach((key) => {
-      // formData.set(key, this[key]);
-      if (typeof this[key] === 'object' ) {
+      if (typeof this[key] === 'object') {
         formData.set(key, JSON.stringify(this[key]));
       } else {
         formData.set(key, this[key]);
