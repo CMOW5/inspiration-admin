@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "eslint-config-google": "^0.9.1",
-    "gh-pages": "^1.2.0"
+    "gh-pages": "^1.2.0",
+    "react-test-renderer": "^16.4.2"
   }
 }
