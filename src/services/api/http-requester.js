@@ -92,7 +92,7 @@ export default class HttpRequester {
         method: requestType,
         url: url,
         data: data,
-        headers: {Authorization: 'Bearer ' + token},
+        // headers: {Authorization: 'Bearer ' + token},
       })
         .then((response) => {
           const methodName = ' then(..) ';
@@ -110,7 +110,7 @@ export default class HttpRequester {
         .catch((error) => {
           const methodName = ' catch(..) ';
           Logger.log(this.className() + methodName + 'error = ', error);
-          this.onFail(error.response.data);
+          this.onFail(error);
 
           const status = error.response.status;
 
