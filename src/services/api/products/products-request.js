@@ -155,7 +155,7 @@ export default class ProductsRequest {
         .then((response) => {
           const methodName = ' then(..) ';
           Logger.log(this.className() + methodName + 'data = ' + response);
-          resolve(response);
+          resolve(response.data.data);
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
