@@ -22,8 +22,7 @@ ReactDOM.render(
       // the save password dialog
       forceRefresh = {true}
     >
-      {/* inject history object */}
-      <Route component={App}/>
+      <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
