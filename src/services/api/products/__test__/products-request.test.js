@@ -5,8 +5,39 @@ import Form from 'utils/form/form';
 
 const faker = require('faker');
 
+test('it gets the products', async () => {
+  expect.assertions(1);
+
+  return ProductsRequest.getProducts()
+    .then(({products}) => {
+      expect(products).toBeInstanceOf(Array);
+    });
+});
+
+test('it gets a single product', async () => {
+  expect.assertions(1);
+
+  const {products} = await ProductsRequest.getProducts();
+
+  return ProductsRequest.getProduct(products[0].id)
+    .then((product) => {
+      expect(product).toEqual(products[0]);
+    });
+});
+
+test('it gets the products count', async () => {
+  expect.assertions(1);
+  return ProductsRequest.count()
+    .then((count) => {
+      expect(typeof count).toBe('number');
+    });
+});
+
+// TODO: add images to the form data
 test('it creates a product', async () => {
   expect.assertions(1);
+
+  const category = await getRandomCategory();
 
   const form = new Form({
     name: faker.name.findName(),
@@ -15,7 +46,7 @@ test('it creates a product', async () => {
     price_sale: faker.random.number(),
     in_sale: faker.random.boolean(),
     active: faker.random.boolean(),
-    category_id: await getRandomCategoryId(),
+    category_id: category.id,
     weight: faker.random.number(),
     units: faker.random.number(),
   });
@@ -26,13 +57,61 @@ test('it creates a product', async () => {
     });
 });
 
+test('it updates a product', async () => {
+  expect.assertions(1);
+
+  const product = await getRandomProduct();
+  const newParentCategory = await getRandomCategory();
+
+  const form = new Form({
+    name: faker.name.findName(),
+    description: faker.lorem.sentence(),
+    price: faker.random.number(),
+    price_sale: faker.random.number(),
+    in_sale: Number(faker.random.boolean()),
+    active: Number(faker.random.boolean()),
+    category_id: newParentCategory.id,
+    weight: faker.random.number(),
+    units: faker.random.number(),
+  });
+  form.setPutMethod();
+
+  return ProductsRequest.updateProduct(product.id, form.getFormData())
+    .then((updatedProduct) => {
+      expect(updatedProduct).toMatchObject(form.data());
+    });
+});
+
+test('it deletes a product', async () => {
+  expect.assertions(1);
+
+  const product = await getRandomProduct();
+
+  return ProductsRequest.deleteProduct(product.id)
+    .then((response) => {
+      expect(response).toMatchObject({
+        message: 'product deleted',
+      });
+    });
+});
+
+
+/**
+ * get a random product from the api
+ * @return {number}
+ */
+async function getRandomProduct() {
+  const {products} = await ProductsRequest.getProducts();
+  return products[getRandomInt(products.length)];
+}
+
 /**
  * get a random category from the api
  * @return {number}
  */
-async function getRandomCategoryId() {
+async function getRandomCategory() {
   const {categories} = await CategoriesRequest.fetchAllCategories();
-  return categories[getRandomInt(categories.length)].id;
+  return categories[getRandomInt(categories.length)];
 }
 
 /**
