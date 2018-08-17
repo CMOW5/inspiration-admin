@@ -50,6 +50,7 @@ test('it updates a category', async () => {
   expect.assertions(1);
 
   const category = await getRandomCategory();
+  // const newParentCategory = await getRandomCategory();
 
   const form = new Form({
     name: faker.name.findName(),
@@ -71,7 +72,9 @@ test('it deletes a category', async () => {
 
   return CategoriesRequest.deleteCategory(category.id)
     .then((response) => {
-      expect(response).toMatchObject({message: 'category deleted'});
+      expect(response).toMatchObject({
+        message: 'category deleted',
+      });
     });
 });
 
@@ -92,7 +95,6 @@ async function getRandomCategory() {
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
-
 
 let localStorageMock = (function() {
   let store = {};
