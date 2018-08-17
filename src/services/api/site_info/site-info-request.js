@@ -58,7 +58,7 @@ export default class SiteInfoRequest {
           Logger.log(this.className() + methodName + 'data = ' + response);
 
           /* get the updated info data */
-          const info = response.data;
+          const info = response.data.data.siteinfo;
           resolve(info);
         })
         .catch((error) => {
