@@ -40,10 +40,10 @@ test('it creates a product', async () => {
   const category = await getRandomCategory();
 
   const form = new Form({
-    name: faker.name.findName(),
+    name: faker.commerce.productName(),
     description: faker.lorem.sentence(),
-    price: faker.random.number(),
-    price_sale: faker.random.number(),
+    price: Number(faker.commerce.price()),
+    price_sale: Number(faker.commerce.price()),
     in_sale: faker.random.boolean(),
     active: faker.random.boolean(),
     category_id: category.id,
@@ -66,8 +66,8 @@ test('it updates a product', async () => {
   const form = new Form({
     name: faker.name.findName(),
     description: faker.lorem.sentence(),
-    price: faker.random.number(),
-    price_sale: faker.random.number(),
+    price: Number(faker.commerce.price()),
+    price_sale: Number(faker.commerce.price()),
     in_sale: Number(faker.random.boolean()),
     active: Number(faker.random.boolean()),
     category_id: newParentCategory.id,
