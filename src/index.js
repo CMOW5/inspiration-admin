@@ -4,7 +4,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 // router
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 
 // redux
 import {Provider} from 'react-redux';
