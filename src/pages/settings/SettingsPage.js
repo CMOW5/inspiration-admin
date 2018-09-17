@@ -10,6 +10,7 @@ import RouterHandler from 'router/router-handler';
 
 /* routes */
 import SettingsRoutes from 'router/routes/settings-routes';
+import BaseRoutes from 'router/routes/base-routes'; 
 
 /* api request */
 import SiteInfoRequest from 'services/api/site_info/site-info-request';
@@ -65,6 +66,7 @@ class SettingsPage extends Component {
     this.sendForm = this.sendForm.bind(this);
     this.showInfoEditedModal = this.showInfoEditedModal.bind(this);
     this.reloadSettingsPage = this.reloadSettingsPage.bind(this);
+    this.cancel = this.cancel.bind(this);
   }
 
   /**
@@ -182,6 +184,16 @@ class SettingsPage extends Component {
       showEditedModal: false,
       showEditingModal: false,
     });
+  }
+
+  /**
+   * cancel the form submission
+   * @param {*} event
+   */
+  cancel(event) {
+    event.preventDefault();
+    const route = BaseRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
   }
 
   /**
