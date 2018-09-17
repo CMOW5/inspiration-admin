@@ -74,6 +74,7 @@ class EditProductForm extends Component {
     this.showProductEditedModal = this.showProductEditedModal.bind(this);
     this.goToShowProduct = this.goToShowProduct.bind(this);
     this.goToProductsList = this.goToProductsList.bind(this);
+    this.onCancelButtonClicked = this.onCancelButtonClicked.bind(this);
 
     /* helpers to calculate the form styles */
     this.inputClass = this.inputClass.bind(this);
@@ -226,6 +227,16 @@ class EditProductForm extends Component {
   goToProductsList() {
     const route = ProductsRoutes.base();
     RouterHandler.goTo(this.props.history, route);
+  }
+
+  /**
+   * redirect the user to the product list if the cancel button is
+   * clicked
+   * @param {*} event
+   */
+  onCancelButtonClicked(event) {
+    event.preventDefault();
+    this.goToProductsList();
   }
 
   /**
@@ -409,7 +420,11 @@ class EditProductForm extends Component {
               </button>
             </div>
             <div className="control">
-              <button className="button is-text">Cancel</button>
+              <button
+                className="button is-text"
+                onClick={this.onCancelButtonClicked}
+              >Cancel
+              </button>
             </div>
           </div>
 

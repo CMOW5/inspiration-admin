@@ -64,7 +64,7 @@ class CreateProductForm extends Component {
     this.saveImages = this.saveImages.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.cancel = this.cancel.bind(this);
+    this.onCancelButtonClicked = this.onCancelButtonClicked.bind(this);
     this.sendForm = this.sendForm.bind(this);
     this.showProductCreatedModal = this.showProductCreatedModal.bind(this);
     this.goToShowProduct = this.goToShowProduct.bind(this);
@@ -188,10 +188,12 @@ class CreateProductForm extends Component {
   }
 
   /**
-   * cancel
+   * redirect the user to the product list
+   * if the cancel button is clicked
+   *
    * @param {object} event
    */
-  cancel(event) {
+  onCancelButtonClicked(event) {
     event.preventDefault();
     const route = ProductsRoutes.base();
     RouterHandler.goTo(this.props.history, route);
@@ -429,7 +431,7 @@ class CreateProductForm extends Component {
             </div>
             <div className="control">
               <button
-                onClick={this.cancel}
+                onClick={this.onCancelButtonClicked}
                 className="button is-text">
                 Cancel
               </button>

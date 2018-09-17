@@ -10,7 +10,7 @@ import RouterHandler from 'router/router-handler';
 
 /* routes */
 import SettingsRoutes from 'router/routes/settings-routes';
-import BaseRoutes from 'router/routes/base-routes'; 
+import BaseRoutes from 'router/routes/base-routes';
 
 /* api request */
 import SiteInfoRequest from 'services/api/site_info/site-info-request';
@@ -66,7 +66,7 @@ class SettingsPage extends Component {
     this.sendForm = this.sendForm.bind(this);
     this.showInfoEditedModal = this.showInfoEditedModal.bind(this);
     this.reloadSettingsPage = this.reloadSettingsPage.bind(this);
-    this.cancel = this.cancel.bind(this);
+    this.onCancelButtonClicked = this.onCancelButtonClicked.bind(this);
   }
 
   /**
@@ -190,7 +190,7 @@ class SettingsPage extends Component {
    * cancel the form submission
    * @param {*} event
    */
-  cancel(event) {
+  onCancelButtonClicked(event) {
     event.preventDefault();
     const route = BaseRoutes.base();
     RouterHandler.goTo(this.props.history, route);
@@ -378,7 +378,7 @@ class SettingsPage extends Component {
           </div>
           <div className="control">
             <button
-              onClick={this.cancel}
+              onClick={this.onCancelButtonClicked}
               className="button is-text">
                 Cancel
             </button>
