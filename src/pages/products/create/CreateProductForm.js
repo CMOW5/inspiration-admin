@@ -18,6 +18,7 @@ import CreateHeader from 'pages/utils/list_headers/CreateHeader';
 import ImagePicker from 'components/images/image_picker/ImagePicker';
 import SimpleNotification
   from 'components/modals/simple_notification/SimpleNotification';
+import Loading from 'components/utils/loading/Loading';
 import LoadingModal from 'components/modals/loading/LoadingModal';
 
 /* styles */
@@ -44,6 +45,7 @@ class CreateProductForm extends Component {
       units: 1,
       images: [],
       categories: [],
+      isFetching: true,
       showCreatingModal: false,
       form: new Form({
         name: '',
@@ -73,6 +75,7 @@ class CreateProductForm extends Component {
 
     /* render methods */
     this.renderCategoriesOptions = this.renderCategoriesOptions.bind(this);
+    this.renderProductInfo = this.renderProductInfo.bind(this);
     this.renderError = this.renderError.bind(this);
   }
 
@@ -90,6 +93,7 @@ class CreateProductForm extends Component {
     const {categories} = await CategoriesRequest.fetchAllCategories();
     this.setState({
       categories: categories,
+      isFetching: false,
     });
   }
 
@@ -254,15 +258,16 @@ class CreateProductForm extends Component {
   }
 
   /**
+   * render the product form if the needed data to create
+   * the product is already fetched
+   *
    * @return {ReactNode}
    */
-  render() {
-    return (
-      <div>
-
-        {/* header */}
-        <CreateHeader title='Add Product' icon='fa fa-shopping-bag fa-2x' />
-
+  renderProductInfo() {
+    if (this.state.isFetching) {
+      return <Loading show="true" title="product" />;
+    } else {
+      return (
         <form onSubmit={this.handleSubmit}>
 
           <div className="field">
@@ -431,6 +436,22 @@ class CreateProductForm extends Component {
           </div>
 
         </form>
+      );
+    }
+  }
+
+  /**
+   * @return {ReactNode}
+   */
+  render() {
+    return (
+      <div>
+
+        {/* header */}
+        <CreateHeader title='Add Product' icon='fa fa-shopping-bag fa-2x' />
+
+        {/* form */}
+        {this.renderProductInfo()}
 
         <SimpleNotification
           show = {this.state.showCreatedModal}
