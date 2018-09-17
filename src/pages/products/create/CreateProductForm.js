@@ -193,7 +193,8 @@ class CreateProductForm extends Component {
    */
   cancel(event) {
     event.preventDefault();
-    Logger.log('cancel');
+    const route = ProductsRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
   }
 
   /**
