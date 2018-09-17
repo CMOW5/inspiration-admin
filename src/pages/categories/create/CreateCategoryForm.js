@@ -48,7 +48,7 @@ class CreateCategoryForm extends Component {
     this.saveImage = this.saveImage.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.cancel = this.cancel.bind(this);
+    this.onCancelButtonClicked = this.onCancelButtonClicked.bind(this);
     this.sendForm = this.sendForm.bind(this);
     this.showCategoryCreatedModal = this.showCategoryCreatedModal.bind(this);
     this.goToShowCategory = this.goToShowCategory.bind(this);
@@ -162,12 +162,15 @@ class CreateCategoryForm extends Component {
   }
 
   /**
-   * cancel
+   * redirect the user to the categories list
+   * if the cancel button is clicked
+   *
    * @param {object} event
    */
-  cancel(event) {
+  onCancelButtonClicked(event) {
     event.preventDefault();
-    Logger.log('cancel');
+    const route = CategoriesRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
   }
 
   /**
@@ -296,7 +299,7 @@ class CreateCategoryForm extends Component {
             </div>
             <div className="control">
               <button
-                onClick={this.cancel}
+                onClick={this.onCancelButtonClicked}
                 className="button is-text">
                 Cancel
               </button>

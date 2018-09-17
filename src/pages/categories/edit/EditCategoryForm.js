@@ -53,6 +53,7 @@ class EditCategoryForm extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendForm = this.sendForm.bind(this);
+    this.onCancelButtonClicked = this.onCancelButtonClicked.bind(this);
     this.showCategoryEditedModal = this.showCategoryEditedModal.bind(this);
     this.goToShowCategory = this.goToShowCategory.bind(this);
     this.goToCategoriesList = this.goToCategoriesList.bind(this);
@@ -182,6 +183,17 @@ class EditCategoryForm extends Component {
       showEditedModal: true,
       showEditingModal: false,
     });
+  }
+
+  /**
+   * redirect the user to the categories list
+   * if the cancel button is clicked
+   *
+   * @param {object} event
+   */
+  onCancelButtonClicked(event) {
+    event.preventDefault();
+    this.goToCategoriesList();
   }
 
   /**
@@ -341,7 +353,11 @@ class EditCategoryForm extends Component {
             </button>
           </div>
           <div className="control">
-            <button className="button is-text">Cancel</button>
+            <button
+              className="button is-text"
+              onClick={this.onCancelButtonClicked}
+            >Cancel
+            </button>
           </div>
         </div>
 
