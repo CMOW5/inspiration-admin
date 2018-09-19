@@ -42,6 +42,8 @@ export default class SingleProductRow extends Component {
     const name = this.props.product.name;
     const description = this.props.product.description;
     const price = this.props.product.price;
+    const status = this.props.product.active ? 'active' : 'inactive';
+    const inSale = this.props.product.in_sale ? 'insale' : '';
 
     const images = [...this.props.product.images];
     const image = images.length ? images[0].url : '';
@@ -52,6 +54,10 @@ export default class SingleProductRow extends Component {
         <td>{name}</td>
         <td>{description}</td>
         <td>{price}</td>
+        <td>
+          <h1>{status}</h1>
+          <h1>{inSale}</h1>
+        </td>
         <td>
           <img
             src={image}
@@ -67,7 +73,7 @@ export default class SingleProductRow extends Component {
                 <span className="icon is-small">
                   <i className="fa fa-eye"></i>
                 </span>
-                <span>view</span>
+                <span>details</span>
               </button>
             </p>
 

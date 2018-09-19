@@ -191,6 +191,7 @@ class ProductList extends Component {
                 <th>name</th>
                 <th>description</th>
                 <th>price</th>
+                <th>status</th>
                 <th><abbr title="image">image</abbr></th>
                 <th>actions</th>
               </tr>
