@@ -28,7 +28,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "reset": "rm -rf node_modules & rm package-lock.json & npm cache clear --force & npm install"
   },
   "devDependencies": {
     "eslint-config-google": "^0.9.1",
