@@ -70,7 +70,8 @@ export default class CategoriesRequest {
         .then((response) => {
           const categories = response.data.data;
           const paginator = response.data.paginator;
-          resolve({categories: categories, paginator: paginator});
+          const orderedCategories = this.orderByName(categories);
+          resolve({categories: orderedCategories, paginator: paginator});
         })
         .catch((error) => {
           reject(error);
@@ -163,5 +164,34 @@ export default class CategoriesRequest {
           reject(error);
         });
     });
+  }
+
+  /**
+   * order the given categories by name
+   * @param {array} categories
+   * @return {array}
+   */
+  static orderByName(categories) {
+    let orderedCategories = categories.slice();
+    orderedCategories.sort(this.compareCategories);
+    return orderedCategories;
+  }
+
+  /**
+   * a comparator function to compare 2 categories names
+   * @param {*} cat1
+   * @param {*} cat2
+   * @return {number}
+   */
+  static compareCategories(cat1, cat2) {
+    if (cat1.name < cat2.name) {
+      return -1;
+    }
+
+    if (cat1.name > cat2.name) {
+      return 1;
+    }
+
+    return 0;
   }
 }
