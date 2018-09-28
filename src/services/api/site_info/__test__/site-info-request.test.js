@@ -18,8 +18,6 @@ test('it gets the site info', async () => {
     'twitter_link': expect.anything(),
     'youtube_link': expect.anything(),
     'instagram_link': expect.anything(),
-    'created_at': expect.anything(),
-    'updated_at': expect.anything(),
     'logo': expect.anything(),
   };
 
@@ -40,8 +38,10 @@ test('it updates the siteinfo', async () => {
     'phone_number': faker.phone.phoneNumber(),
     'schedule': faker.lorem.sentence(),
     'address': faker.address.streetAddress(),
-    'latitude': Number(faker.address.latitude()),
-    'longitude': Number(faker.address.longitude()),
+    // here we need to delete the trailing zeros
+    // e.g => "2.4940" to "2.494"
+    'latitude': Number(faker.address.latitude()).toString(),
+    'longitude': Number(faker.address.longitude()).toString(),
     // 'facebook_link': expect.anything(),
     // 'twitter_link': expect.anything(),
     // 'youtube_link': expect.anything(),
